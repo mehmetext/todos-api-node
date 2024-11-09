@@ -6,8 +6,8 @@ const NODE_ENV = process.env.NODE_ENV || "development";
 const ENV_PATH = path.resolve(
   __dirname,
   NODE_ENV === "development"
-    ? "../../../.env.local"
-    : `../../../.env.${NODE_ENV}`
+    ? "../../../../.env.local"
+    : `../../../../.env.${NODE_ENV}`
 );
 
 dotenv.config({ path: ENV_PATH });
