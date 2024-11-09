@@ -1,0 +1,16 @@
+{
+  "name": "todos-api-node",
+  "version": "0.0.1",
+  "description": "Todos API Node",
+  "main": "index.js",
+  "scripts": {
+    "build": "tsc -p ."
+  },
+  "keywords": [
+    "todos",
+    "api",
+    "node"
+  ],
+  "author": "Mehmet Konukçu",
+  "license": "MIT"
+}
