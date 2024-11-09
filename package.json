@@ -4,7 +4,11 @@
   "description": "Todos API Node",
   "main": "index.js",
   "scripts": {
-    "build": "tsc -p ."
+    "build": "tsc -p .",
+    "build:dev": "tsc -p . --watch",
+    "start": "node dist/server.js",
+    "start:dev": "node --watch dist/server.js",
+    "dev": "concurrently \"pnpm build:dev\" \"pnpm start:dev\""
   },
   "keywords": [
     "todos",
@@ -12,5 +16,8 @@
     "node"
   ],
   "author": "Mehmet Konukçu",
-  "license": "MIT"
+  "license": "MIT",
+  "devDependencies": {
+    "concurrently": "^9.1.0"
+  }
 }
