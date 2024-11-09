@@ -1,7 +1,7 @@
-import { Request, Response } from "express";
 import ApiResponse from "@/lib/core/api-response";
 import todos from "@/lib/static/todos";
 import wait from "@/lib/utils/wait.util";
+import { Request, Response } from "express";
 
 export default class TodosController {
   static async getTodos(req: Request, res: Response) {
