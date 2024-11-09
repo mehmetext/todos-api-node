@@ -8,7 +8,6 @@ interface IUser {
 
 interface ITokenPayload {
   userId: string;
-  email: string;
 }
 
 interface IAuthRequest extends Request {

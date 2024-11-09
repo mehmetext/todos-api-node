@@ -8,10 +8,7 @@ export default class AuthController {
     const { email, password } = req.body;
 
     if (email === "test@test.com" && password === "test") {
-      const token = generateToken({
-        userId: "1",
-        email: "test@test.com",
-      });
+      const token = generateToken({ userId: "1" });
 
       return ApiResponse.success(res, { token });
     }

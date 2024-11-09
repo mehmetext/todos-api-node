@@ -21,8 +21,8 @@ export default function authMiddleware(
     // Normalde burada user service'den kullanıcı bilgileri alınır
     req.user = {
       id: decoded.userId,
-      email: decoded.email,
-      name: "Test User", // Örnek
+      email: "test@test.com",
+      name: "Test User",
     };
 
     next();
