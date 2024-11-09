@@ -10,10 +10,36 @@ import { v4 as uuidv4 } from "uuid";
 
 export default class TodosController {
   static async getTodos(
-    req: Request<{}, {}, {}, GetTodosInput>,
+    req: Request<{}, {}, {}, GetTodosInput["query"]>,
     res: Response
   ) {
+    const { sort } = req.query;
+
     const filteredTodos = todos.filter((todo) => todo.userId === req.user!.id);
+
+    if (sort) {
+      filteredTodos.sort((a, b) => {
+        if (sort === "ascByCreatedAt") {
+          return a.createdAt.getTime() - b.createdAt.getTime();
+        } else if (sort === "descByCreatedAt") {
+          return b.createdAt.getTime() - a.createdAt.getTime();
+        } else if (sort === "ascByCompleted") {
+          return a.completed ? 1 : -1;
+        } else if (sort === "descByCompleted") {
+          return b.completed ? 1 : -1;
+        } else if (sort === "ascByTitle") {
+          return a.title.localeCompare(b.title);
+        } else if (sort === "descByTitle") {
+          return b.title.localeCompare(a.title);
+        } else if (sort === "ascByContent") {
+          return (a.content ?? "").localeCompare(b.content ?? "");
+        } else if (sort === "descByContent") {
+          return (b.content ?? "").localeCompare(a.content ?? "");
+        }
+
+        return 0;
+      });
+    }
 
     return ApiResponse.success(res, filteredTodos);
   }
