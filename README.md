@@ -95,6 +95,8 @@ Proje TypeScript ile geliştirilmiş olup, modüler bir yapı kullanılmaktadır
 - `src/app/lib` - Yardımcı fonksiyonlar ve tipler
 - `src/app/routes` - API route tanımlamaları
 
+Proje halen geliştirme aşamasındadır, öğrenim amacıyla geliştirilmektedir.
+
 ## 📝 Lisans
 
 Bu proje MIT lisansı altında lisanslanmıştır. Detaylar için [LICENSE](LICENSE) dosyasına bakınız.
