@@ -1,11 +1,18 @@
 import ApiResponse from "@/lib/core/api-response";
 import todos from "@/lib/static/todos";
-import { CreateTodoInput, UpdateTodoInput } from "@/lib/validations";
+import {
+  CreateTodoInput,
+  GetTodosInput,
+  UpdateTodoInput,
+} from "@/lib/validations";
 import { Request, Response } from "express";
 import { v4 as uuidv4 } from "uuid";
 
 export default class TodosController {
-  static async getTodos(req: Request, res: Response) {
+  static async getTodos(
+    req: Request<{}, {}, {}, GetTodosInput>,
+    res: Response
+  ) {
     const filteredTodos = todos.filter((todo) => todo.userId === req.user!.id);
 
     return ApiResponse.success(res, filteredTodos);
@@ -22,7 +29,10 @@ export default class TodosController {
     return ApiResponse.success(res, todo);
   }
 
-  static createTodo(req: Request<{}, {}, CreateTodoInput>, res: Response) {
+  static createTodo(
+    req: Request<{}, {}, CreateTodoInput["body"]>,
+    res: Response
+  ) {
     const { title, content } = req.body;
 
     const todo = {
@@ -41,7 +51,7 @@ export default class TodosController {
   }
 
   static updateTodo(
-    req: Request<{ id: string }, {}, UpdateTodoInput>,
+    req: Request<{ id: string }, {}, UpdateTodoInput["body"]>,
     res: Response
   ) {
     const { id } = req.params;
