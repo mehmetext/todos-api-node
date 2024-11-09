@@ -24,7 +24,8 @@
   "dependencies": {
     "dotenv": "^16.4.5",
     "express": "^4.21.1",
-    "module-alias": "^2.2.3"
+    "module-alias": "^2.2.3",
+    "uuid": "^11.0.2"
   },
   "_moduleAliases": {
     "@": "dist/app"
