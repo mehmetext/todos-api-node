@@ -27,7 +27,7 @@ export default class ApiResponse {
     });
   }
 
-  // Özel durumlar için
+  // for specific errors
   static notFound(res: Response, message: string = "Resource not found"): void {
     this.error(res, "NOT_FOUND", message, 404);
   }
