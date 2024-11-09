@@ -1,6 +1,6 @@
 import { NextFunction, Request, Response } from "express";
 
-export default function requestLogger(
+export default function requestLoggerMiddleware(
   req: Request,
   res: Response,
   next: NextFunction
