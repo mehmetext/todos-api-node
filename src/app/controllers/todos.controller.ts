@@ -1,6 +1,5 @@
 import { Request, Response } from "express";
 import ApiResponse from "@/lib/core/api-response";
-
 import todos from "@/lib/static/todos";
 import wait from "@/lib/utils/wait.util";
 

@@ -1,5 +1,5 @@
 import { TodosController } from "@/controllers";
-import { Router, Request } from "express";
+import { Router } from "express";
 
 const router: Router = Router();
 
