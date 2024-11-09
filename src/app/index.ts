@@ -1,6 +1,7 @@
 import cors from "cors";
 import express, { Application } from "express";
 import corsOptions from "./lib/core/cors";
+import rateLimiter from "./lib/core/rate-limiter";
 import { env } from "./lib/utils";
 import { errorHandlerMiddleware, requestLoggerMiddleware } from "./middlewares";
 import routes from "./routes";
@@ -10,6 +11,7 @@ const app: Application = express();
 
 // Middlewares
 app.use(cors(corsOptions));
+app.use(rateLimiter);
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 app.use(requestLoggerMiddleware);
