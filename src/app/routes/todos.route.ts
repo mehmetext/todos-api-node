@@ -1,10 +1,11 @@
+import ApiResponse from "@/lib/core/api-response";
 import todos from "@/lib/static/todos";
 import { Router } from "express";
 
 const router: Router = Router();
 
 router.get("/", (req, res) => {
-  res.json(todos);
+  return ApiResponse.success(res, todos);
 });
 
 router.get("/:id", (req, res) => {
@@ -12,10 +13,10 @@ router.get("/:id", (req, res) => {
   const todo = todos.find((todo) => todo.id === id);
 
   if (!todo) {
-    res.status(404).json({ message: "Todo not found" });
+    return ApiResponse.notFound(res, "Todo not found");
   }
 
-  res.json(todo);
+  return ApiResponse.success(res, todo);
 });
 
 export default router;
