@@ -1,6 +1,5 @@
 import { TodosController } from "@/controllers";
 import ApiResponse from "@/lib/core/api-response";
-import todos from "@/lib/static/todos";
 import { Router, Request } from "express";
 
 const router: Router = Router();
@@ -10,9 +9,9 @@ router.get("/", async (req, res) => {
   return ApiResponse.success(res, todos);
 });
 
-router.get("/:id", (req: Request<{ id: string }>, res) => {
+router.get("/:id", async (req: Request<{ id: string }>, res) => {
   const { id } = req.params;
-  const todo = todos.find((todo) => todo.id === id);
+  const todo = await TodosController.getTodoById(id);
 
   if (!todo) {
     return ApiResponse.notFound(res, "Todo not found");
