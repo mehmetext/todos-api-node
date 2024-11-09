@@ -1,21 +1,21 @@
 import ApiResponse from "@/lib/core/api-response";
 import todos from "@/lib/static/todos";
-import wait from "@/lib/utils/wait.util";
 import { CreateTodoInput, UpdateTodoInput } from "@/lib/validations";
 import { Request, Response } from "express";
 import { v4 as uuidv4 } from "uuid";
 
 export default class TodosController {
   static async getTodos(req: Request, res: Response) {
-    await wait(200);
-    return ApiResponse.success(res, todos);
+    const filteredTodos = todos.filter((todo) => todo.userId === req.user!.id);
+
+    return ApiResponse.success(res, filteredTodos);
   }
 
   static getTodoById(req: Request<{ id: string }>, res: Response) {
     const { id } = req.params;
     const todo = todos.find((todo) => todo.id === id);
 
-    if (!todo) {
+    if (!todo || todo.userId !== req.user!.id) {
       return ApiResponse.notFound(res, "Todo not found");
     }
 
@@ -49,7 +49,7 @@ export default class TodosController {
 
     const todo = todos.find((todo) => todo.id === id);
 
-    if (!todo) {
+    if (!todo || todo.userId !== req.user!.id) {
       return ApiResponse.notFound(res, "Todo not found");
     }
 
@@ -66,7 +66,7 @@ export default class TodosController {
 
     const todo = todos.find((todo) => todo.id === id);
 
-    if (!todo) {
+    if (!todo || todo.userId !== req.user!.id) {
       return ApiResponse.notFound(res, "Todo not found");
     }
 
