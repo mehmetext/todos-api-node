@@ -2,7 +2,6 @@
   "name": "todos-api-node",
   "version": "0.0.1",
   "description": "Todos API Node",
-  "main": "index.js",
   "scripts": {
     "build": "tsc -p .",
     "build:dev": "tsc -p . --watch",
@@ -18,6 +17,10 @@
   "author": "Mehmet Konukçu",
   "license": "MIT",
   "devDependencies": {
+    "@types/express": "^5.0.0",
     "concurrently": "^9.1.0"
+  },
+  "dependencies": {
+    "express": "^4.21.1"
   }
 }
