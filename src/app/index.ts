@@ -1,5 +1,6 @@
 import cors from "cors";
 import express, { Application } from "express";
+import corsOptions from "./lib/core/cors";
 import { env } from "./lib/utils";
 import { errorHandlerMiddleware, requestLoggerMiddleware } from "./middlewares";
 import routes from "./routes";
@@ -8,7 +9,7 @@ import routes from "./routes";
 const app: Application = express();
 
 // Middlewares
-app.use(cors());
+app.use(cors(corsOptions));
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 app.use(requestLoggerMiddleware);

@@ -15,6 +15,7 @@ dotenv.config({ path: ENV_PATH });
 const env = {
   NODE_ENV,
   PORT: process.env.PORT || 3030,
+  CORS_ORIGINS: process.env.CORS_ORIGINS || "http://localhost:3000",
 };
 
 export default env;
