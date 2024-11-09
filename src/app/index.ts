@@ -5,6 +5,9 @@ import routes from "./routes";
 // Initialize express app
 const app: Application = express();
 
+app.use(express.json());
+app.use(express.urlencoded({ extended: true }));
+
 // Initialize routes
 app.use("/api", routes);
 
