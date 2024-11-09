@@ -2,6 +2,7 @@ import ApiResponse from "@/lib/core/api-response";
 import todos from "@/lib/static/todos";
 import wait from "@/lib/utils/wait.util";
 import { Request, Response } from "express";
+import { v4 as uuidv4 } from "uuid";
 
 export default class TodosController {
   static async getTodos(req: Request, res: Response) {
@@ -16,6 +17,24 @@ export default class TodosController {
     if (!todo) {
       return ApiResponse.notFound(res, "Todo not found");
     }
+
+    return ApiResponse.success(res, todo);
+  }
+
+  static createTodo(
+    req: Request<{}, {}, { title: string; description?: string }>,
+    res: Response
+  ) {
+    const { title, description } = req.body;
+
+    const todo = {
+      id: uuidv4(),
+      title,
+      description,
+      completed: false,
+    };
+
+    todos.push(todo);
 
     return ApiResponse.success(res, todo);
   }
