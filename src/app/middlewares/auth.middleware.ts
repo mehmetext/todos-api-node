@@ -1,16 +1,32 @@
 import ApiResponse from "@/lib/core/api-response";
-import { NextFunction, Request, Response } from "express";
+import { IAuthRequest } from "@/lib/types/auth.types";
+import { verifyToken } from "@/lib/utils/jwt.util";
+import { NextFunction, Response } from "express";
 
 export default function authMiddleware(
-  req: Request,
+  req: IAuthRequest,
   res: Response,
   next: NextFunction
 ) {
-  const token = req.headers.authorization;
+  try {
+    const authHeader = req.headers.authorization;
 
-  if (!token) {
-    return ApiResponse.unauthorized(res, "Unauthorized");
+    if (!authHeader?.startsWith("Bearer ")) {
+      return ApiResponse.unauthorized(res);
+    }
+
+    const token = authHeader.split(" ")[1];
+    const decoded = verifyToken(token);
+
+    // Normalde burada user service'den kullanıcı bilgileri alınır
+    req.user = {
+      id: decoded.userId,
+      email: decoded.email,
+      name: "Test User", // Örnek
+    };
+
+    next();
+  } catch (err) {
+    return ApiResponse.unauthorized(res, "Invalid token");
   }
-
-  next();
 }
