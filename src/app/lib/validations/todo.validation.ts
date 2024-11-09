@@ -35,6 +35,7 @@ export const getTodosSchema = z.object({
         "descByContent",
       ])
       .optional(),
+    q: z.string().optional(),
   }),
 });
 

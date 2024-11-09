@@ -15,7 +15,17 @@ export default class TodosController {
   ) {
     const { sort } = req.query;
 
-    const filteredTodos = todos.filter((todo) => todo.userId === req.user!.id);
+    const filteredTodos = todos
+      .filter((todo) => todo.userId === req.user!.id)
+      .filter(
+        (todo) =>
+          todo.title
+            .toLocaleLowerCase()
+            .includes(req.query.q?.toLocaleLowerCase() ?? "") ||
+          todo.content
+            ?.toLocaleLowerCase()
+            .includes(req.query.q?.toLocaleLowerCase() ?? "")
+      );
 
     if (sort) {
       filteredTodos.sort((a, b) => {
