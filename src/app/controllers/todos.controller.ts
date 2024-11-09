@@ -32,6 +32,8 @@ export default class TodosController {
       title,
       description,
       completed: false,
+      createdAt: new Date(),
+      updatedAt: new Date(),
     };
 
     todos.push(todo);

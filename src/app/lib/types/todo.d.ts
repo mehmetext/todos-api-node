@@ -3,4 +3,6 @@ interface ITodo {
   title: string;
   content?: string;
   completed: boolean;
+  createdAt: Date;
+  updatedAt: Date;
 }
