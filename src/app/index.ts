@@ -1,6 +1,6 @@
 import express, { Application } from "express";
 import routes from "./routes";
-import { env } from "./utils";
+import { env } from "./lib/utils";
 
 // Initialize express app
 const app: Application = express();
