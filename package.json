@@ -17,13 +17,16 @@
   "author": "Mehmet Konukçu",
   "license": "MIT",
   "devDependencies": {
+    "@types/cors": "^2.8.17",
     "@types/express": "^5.0.0",
     "@types/module-alias": "^2.0.4",
     "concurrently": "^9.1.0"
   },
   "dependencies": {
+    "cors": "^2.8.5",
     "dotenv": "^16.4.5",
     "express": "^4.21.1",
+    "express-rate-limit": "^7.4.1",
     "module-alias": "^2.2.3",
     "uuid": "^11.0.2",
     "zod": "^3.23.8"
