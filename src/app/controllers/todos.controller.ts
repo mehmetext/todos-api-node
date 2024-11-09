@@ -29,6 +29,7 @@ export default class TodosController {
       id: uuidv4(),
       title,
       content,
+      userId: req.user!.id,
       completed: false,
       createdAt: new Date(),
       updatedAt: new Date(),
