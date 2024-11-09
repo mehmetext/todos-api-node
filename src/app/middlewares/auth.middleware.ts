@@ -1,6 +1,6 @@
 import ApiResponse from "@/lib/core/api-response";
 import { IAuthRequest } from "@/lib/types/auth.types";
-import { verifyToken } from "@/lib/utils/jwt.util";
+import { verifyToken } from "@/lib/utils";
 import { NextFunction, Response } from "express";
 
 export default function authMiddleware(

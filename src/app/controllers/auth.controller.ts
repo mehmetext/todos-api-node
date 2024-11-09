@@ -1,5 +1,5 @@
 import ApiResponse from "@/lib/core/api-response";
-import { generateToken } from "@/lib/utils/jwt.util";
+import { generateToken } from "@/lib/utils";
 import { LoginInput } from "@/lib/validations/auth.validation";
 import { Request, Response } from "express";
 
