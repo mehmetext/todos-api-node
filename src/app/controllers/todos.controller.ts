@@ -59,4 +59,19 @@ export default class TodosController {
 
     return ApiResponse.success(res, todo);
   }
+
+  static deleteTodo(req: Request<{ id: string }>, res: Response) {
+    const { id } = req.params;
+
+    const todo = todos.find((todo) => todo.id === id);
+
+    if (!todo) {
+      return ApiResponse.notFound(res, "Todo not found");
+    }
+
+    // Remove the todo from the array
+    // todos = todos.filter((todo) => todo.id !== id);
+
+    return ApiResponse.success(res, null);
+  }
 }
