@@ -1,10 +1,12 @@
+import { TodosController } from "@/controllers";
 import ApiResponse from "@/lib/core/api-response";
 import todos from "@/lib/static/todos";
 import { Router, Request } from "express";
 
 const router: Router = Router();
 
-router.get("/", (req, res) => {
+router.get("/", async (req, res) => {
+  const todos = await TodosController.getTodos();
   return ApiResponse.success(res, todos);
 });
 
