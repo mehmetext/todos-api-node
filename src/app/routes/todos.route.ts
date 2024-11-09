@@ -1,6 +1,6 @@
 import ApiResponse from "@/lib/core/api-response";
 import todos from "@/lib/static/todos";
-import { Router } from "express";
+import { Router, Request } from "express";
 
 const router: Router = Router();
 
@@ -8,7 +8,7 @@ router.get("/", (req, res) => {
   return ApiResponse.success(res, todos);
 });
 
-router.get("/:id", (req, res) => {
+router.get("/:id", (req: Request<{ id: string }>, res) => {
   const { id } = req.params;
   const todo = todos.find((todo) => todo.id === id);
 
