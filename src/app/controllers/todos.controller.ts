@@ -1,6 +1,7 @@
 import ApiResponse from "@/lib/core/api-response";
 import todos from "@/lib/static/todos";
 import wait from "@/lib/utils/wait.util";
+import { CreateTodoInput } from "@/lib/validations";
 import { Request, Response } from "express";
 import { v4 as uuidv4 } from "uuid";
 
@@ -21,10 +22,7 @@ export default class TodosController {
     return ApiResponse.success(res, todo);
   }
 
-  static createTodo(
-    req: Request<{}, {}, { title: string; description?: string }>,
-    res: Response
-  ) {
+  static createTodo(req: Request<{}, {}, CreateTodoInput>, res: Response) {
     const { title, description } = req.body;
 
     const todo = {
