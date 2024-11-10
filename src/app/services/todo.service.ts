@@ -1,5 +1,6 @@
 import { API } from "@/lib/constants";
 import prisma from "@/lib/core/prisma";
+import { generateRandomHexColor } from "@/lib/utils";
 import {
   CreateTodoInput,
   GetTodosInput,
@@ -79,7 +80,33 @@ export default class TodoService {
   }
 
   static async createTodo(userId: string, data: CreateTodoInput["body"]) {
-    return prisma.todo.create({ data: { ...data, userId } });
+    return prisma.todo.create({
+      select: {
+        id: true,
+        title: true,
+        content: true,
+        createdAt: true,
+        updatedAt: true,
+        labels: { select: { id: true, name: true, color: true } },
+      },
+      data: {
+        title: data.title,
+        content: data.content,
+        userId: userId,
+        labels: {
+          connect: data.labels
+            .filter((label) => label.id && !label.name)
+            .map((label) => ({ id: label.id })),
+          create: data.labels
+            .filter((label) => !label.id && label.name)
+            .map((label) => ({
+              name: label.name!,
+              color: generateRandomHexColor(),
+              userId,
+            })),
+        },
+      },
+    });
   }
 
   static async updateTodo(

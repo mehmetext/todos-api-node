@@ -1,2 +1,3 @@
+export * from "./color.util";
 export * from "./jwt.util";
-export { default as wait } from "./wait.util";
+export * from "./wait.util";

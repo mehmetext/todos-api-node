@@ -10,6 +10,12 @@ export const createTodoSchema = z.object({
       .string()
       .max(500, "Açıklama 500 karakterden uzun olamaz")
       .optional(),
+    labels: z.array(
+      z.object({
+        id: z.string().optional(),
+        name: z.string().optional(),
+      })
+    ),
   }),
 });
 
