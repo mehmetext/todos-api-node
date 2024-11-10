@@ -2,6 +2,7 @@ import { Request, Response } from "express";
 import rateLimit from "express-rate-limit";
 import { env } from "../utils";
 import ApiResponse from "./api-response";
+import { ERROR_CODES } from "./error-codes";
 
 const options = {
   windowMs: 15 * 60 * 1000, // 15 minutes
@@ -10,7 +11,7 @@ const options = {
   handler: (req: Request, res: Response) => {
     ApiResponse.error(
       res,
-      "TOO_MANY_REQUESTS",
+      ERROR_CODES.TOO_MANY_REQUESTS,
       "Too many requests from this IP, please try again later.",
       429
     );

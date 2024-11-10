@@ -1,4 +1,5 @@
 import ApiResponse from "@/lib/core/api-response";
+import { ERROR_CODES } from "@/lib/core/error-codes";
 import { env } from "@/lib/utils";
 import { NextFunction, Request, Response } from "express";
 
@@ -19,7 +20,7 @@ export default function errorHandlerMiddleware(
   if (env.NODE_ENV === "development") {
     return ApiResponse.error(
       res,
-      "INTERNAL_SERVER_ERROR",
+      ERROR_CODES.INTERNAL_SERVER_ERROR,
       "Something went wrong",
       500,
       { name: err.name, message: err.message }
@@ -28,7 +29,7 @@ export default function errorHandlerMiddleware(
 
   return ApiResponse.error(
     res,
-    "INTERNAL_SERVER_ERROR",
+    ERROR_CODES.INTERNAL_SERVER_ERROR,
     "Something went wrong"
   );
 }
