@@ -6,5 +6,6 @@ export const API = {
     BASE: "/api",
     AUTH: "/auth",
     TODOS: "/todos",
+    LABELS: "/labels",
   },
 } as const;

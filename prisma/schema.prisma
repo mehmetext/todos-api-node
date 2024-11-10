@@ -13,6 +13,7 @@ model User {
   name          String
   password      String
   todos         Todo[]
+  labels        Label[]
   refreshTokens RefreshToken[]
 
   createdAt DateTime @default(now())
@@ -41,6 +42,23 @@ model Todo {
   title     String
   content   String?
   completed Boolean @default(false)
+  labels    Label[]
+
+  userId String
+  user   User   @relation(fields: [userId], references: [id])
+
+  createdAt DateTime  @default(now())
+  updatedAt DateTime  @updatedAt
+  deletedAt DateTime?
+
+  @@index([userId])
+}
+
+model Label {
+  id    String @id @default(cuid())
+  name  String
+  color String @default("#000000")
+  todos Todo[]
 
   userId String
   user   User   @relation(fields: [userId], references: [id])

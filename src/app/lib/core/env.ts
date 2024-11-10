@@ -14,7 +14,7 @@ dotenv.config({ path: ENV_PATH });
 
 const env = {
   NODE_ENV,
-  PORT: process.env.PORT || 3030,
+  PORT: process.env.PORT || 3000,
   CORS_ORIGINS: process.env.CORS_ORIGINS || "http://localhost:3000",
   JWT_SECRET: process.env.JWT_SECRET || "secret",
   JWT_REFRESH_SECRET: process.env.JWT_REFRESH_SECRET || "secret",

@@ -213,6 +213,130 @@
           }
         }
       ]
+    },
+    {
+      "name": "Labels",
+      "item": [
+        {
+          "name": "Get All Labels",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{accessToken}}"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/api/labels",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "labels"]
+            }
+          }
+        },
+        {
+          "name": "Get Label by ID",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{accessToken}}"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/api/labels/:id",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "labels", ":id"],
+              "variable": [
+                {
+                  "key": "id",
+                  "value": "label-id-here"
+                }
+              ]
+            }
+          }
+        },
+        {
+          "name": "Create Label",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{accessToken}}"
+              },
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n    \"name\": \"Important\",\n    \"color\": \"#FF0000\"\n}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/api/labels",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "labels"]
+            }
+          }
+        },
+        {
+          "name": "Update Label",
+          "request": {
+            "method": "PUT",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{accessToken}}"
+              },
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n    \"name\": \"Very Important\",\n    \"color\": \"#FF0000\"\n}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/api/labels/:id",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "labels", ":id"],
+              "variable": [
+                {
+                  "key": "id",
+                  "value": "label-id-here"
+                }
+              ]
+            }
+          }
+        },
+        {
+          "name": "Delete Label",
+          "request": {
+            "method": "DELETE",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{accessToken}}"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/api/labels/:id",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "labels", ":id"],
+              "variable": [
+                {
+                  "key": "id",
+                  "value": "label-id-here"
+                }
+              ]
+            }
+          }
+        }
+      ]
     }
   ],
   "variable": [
