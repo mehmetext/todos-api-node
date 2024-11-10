@@ -14,16 +14,15 @@ import { Prisma } from "@prisma/client";
 
 export default class TodoService {
   static async getTodos(userId: string, query: GetTodosInput["query"]) {
-    const { sort, q, page = 1 } = query;
     const labels = query.labels?.split(",");
 
     const whereClause: Prisma.TodoWhereInput = {
       deletedAt: null,
       userId,
-      ...(q && {
+      ...(query.q && {
         OR: [
-          { title: { contains: q, mode: "insensitive" } },
-          { content: { contains: q, mode: "insensitive" } },
+          { title: { contains: query.q, mode: "insensitive" } },
+          { content: { contains: query.q, mode: "insensitive" } },
         ],
       }),
       ...(labels && {
@@ -46,25 +45,26 @@ export default class TodoService {
         },
         where: whereClause,
         orderBy: {
-          ...(sort === "ascByCreatedAt" && { createdAt: "asc" }),
-          ...(sort === "descByCreatedAt" && { createdAt: "desc" }),
-          ...(sort === "ascByUpdatedAt" && { updatedAt: "asc" }),
-          ...(sort === "descByUpdatedAt" && { updatedAt: "desc" }),
-          ...(sort === "ascByCompleted" && { completed: "asc" }),
-          ...(sort === "descByCompleted" && { completed: "desc" }),
-          ...(sort === "ascByTitle" && { title: "asc" }),
-          ...(sort === "descByTitle" && { title: "desc" }),
-          ...(sort === "ascByContent" && { content: "asc" }),
-          ...(sort === "descByContent" && { content: "desc" }),
+          ...(query.sort === "ascByCreatedAt" && { createdAt: "asc" }),
+          ...(query.sort === "descByCreatedAt" && { createdAt: "desc" }),
+          ...(query.sort === "ascByUpdatedAt" && { updatedAt: "asc" }),
+          ...(query.sort === "descByUpdatedAt" && { updatedAt: "desc" }),
+          ...(query.sort === "ascByCompleted" && { completed: "asc" }),
+          ...(query.sort === "descByCompleted" && { completed: "desc" }),
+          ...(query.sort === "ascByTitle" && { title: "asc" }),
+          ...(query.sort === "descByTitle" && { title: "desc" }),
+          ...(query.sort === "ascByContent" && { content: "asc" }),
+          ...(query.sort === "descByContent" && { content: "desc" }),
+          ...(!query.sort && { createdAt: "desc" }),
         },
-        skip: getPaginationSkip(page),
+        skip: getPaginationSkip(query.page),
         take: API.PAGINATION.DEFAULT_PAGE_SIZE,
       }),
       prisma.todo.count({ where: whereClause }),
     ]);
 
     return {
-      pagination: calculatePagination(total, page),
+      pagination: calculatePagination(total, query.page),
       todos,
     };
   }
