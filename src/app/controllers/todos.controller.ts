@@ -5,6 +5,7 @@ import {
   GetTodosInput,
   UpdateTodoInput,
 } from "@/lib/validations";
+import { Todo } from "@prisma/client";
 import { Request, Response } from "express";
 import { v4 as uuidv4 } from "uuid";
 
@@ -71,10 +72,10 @@ export default class TodosController {
   ) {
     const { title, content } = req.body;
 
-    const todo = {
+    const todo: Todo = {
       id: uuidv4(),
       title,
-      content,
+      content: content ?? null,
       userId: req.user!.id,
       completed: false,
       createdAt: new Date(),

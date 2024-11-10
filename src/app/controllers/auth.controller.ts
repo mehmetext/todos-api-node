@@ -1,4 +1,5 @@
 import ApiResponse from "@/lib/core/api-response";
+import prisma from "@/lib/core/prisma";
 import { generateTokens, verifyRefreshToken } from "@/lib/utils";
 import { LoginInput } from "@/lib/validations/auth.validation";
 import { CookieOptions, Request, Response } from "express";
@@ -15,21 +16,27 @@ export default class AuthController {
   static async login(req: Request<{}, {}, LoginInput["body"]>, res: Response) {
     const { email, password } = req.body;
 
-    if (email === "test@test.com" && password === "test") {
-      const tokens = generateTokens({ userId: "user123" });
+    const user = await prisma.user.findUnique({
+      where: {
+        email,
+      },
+    });
 
-      // Set refresh token as httpOnly cookie
-      res.cookie(
-        "refresh_token",
-        tokens.refreshToken,
-        AuthController.REFRESH_TOKEN_COOKIE_OPTIONS
-      );
-
-      // Send access token in response body
-      return ApiResponse.success(res, { accessToken: tokens.accessToken });
+    if (!user || user.password !== password) {
+      return ApiResponse.unauthorized(res, "Invalid credentials");
     }
 
-    return ApiResponse.unauthorized(res, "Invalid credentials");
+    const tokens = generateTokens({ userId: user.id });
+
+    // Set refresh token as httpOnly cookie
+    res.cookie(
+      "refresh_token",
+      tokens.refreshToken,
+      AuthController.REFRESH_TOKEN_COOKIE_OPTIONS
+    );
+
+    // Send access token in response body
+    return ApiResponse.success(res, { accessToken: tokens.accessToken });
   }
 
   static async refresh(req: Request, res: Response) {

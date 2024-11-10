@@ -10,7 +10,9 @@
     "dev": "concurrently \"pnpm build:dev\" \"pnpm start:dev\"",
     "prisma:generate": "dotenv -e .env.local -- prisma generate",
     "prisma:migrate": "dotenv -e .env.local -- prisma migrate dev",
-    "prisma:studio": "dotenv -e .env.local -- prisma studio"
+    "prisma:studio": "dotenv -e .env.local -- prisma studio",
+    "prisma:reset": "dotenv -e .env.local -- prisma migrate reset --force",
+    "prisma:deploy": "dotenv -e .env.local -- prisma migrate deploy"
   },
   "keywords": [
     "todos",

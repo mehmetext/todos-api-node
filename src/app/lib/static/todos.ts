@@ -1,4 +1,6 @@
-const todos: ITodo[] = [
+import { Todo } from "@prisma/client";
+
+const todos: Todo[] = [
   {
     id: "a1b2c3d4",
     userId: "user123",
@@ -39,6 +41,7 @@ const todos: ITodo[] = [
     id: "q7r8s9t0",
     userId: "user567",
     title: "Exercise",
+    content: null,
     completed: false,
     createdAt: new Date("2023-05-03T06:45:00Z"),
     updatedAt: new Date("2023-05-03T06:45:00Z"),

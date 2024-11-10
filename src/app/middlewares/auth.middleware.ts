@@ -1,9 +1,10 @@
 import ApiResponse from "@/lib/core/api-response";
+import prisma from "@/lib/core/prisma";
 import { IAuthRequest } from "@/lib/types/auth.types";
 import { verifyAccessToken } from "@/lib/utils";
 import { NextFunction, Response } from "express";
 
-export default function authMiddleware(
+export default async function authMiddleware(
   req: IAuthRequest,
   res: Response,
   next: NextFunction
@@ -18,15 +19,19 @@ export default function authMiddleware(
     const token = authHeader.split(" ")[1];
     const decoded = verifyAccessToken(token);
 
-    // Normalde burada user service'den kullanıcı bilgileri alınır
-    req.user = {
-      id: decoded.userId,
-      email: "test@test.com",
-      name: "Test User",
-    };
+    const user = await prisma.user.findUnique({
+      where: { id: decoded.userId },
+    });
 
+    if (!user) {
+      console.error("User not found:", decoded.userId);
+      return ApiResponse.unauthorized(res, "Invalid token");
+    }
+
+    req.user = user;
     next();
   } catch (err) {
+    console.log(err);
     return ApiResponse.unauthorized(res, "Invalid token");
   }
 }
