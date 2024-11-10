@@ -1,7 +1,8 @@
 import ApiResponse from "@/lib/core/api-response";
 import prisma from "@/lib/core/prisma";
 import { generateTokens, verifyRefreshToken } from "@/lib/utils";
-import { LoginInput } from "@/lib/validations/auth.validation";
+import { LoginInput, RegisterInput } from "@/lib/validations/auth.validation";
+import bcrypt from "bcrypt";
 import { CookieOptions, Request, Response } from "express";
 
 export default class AuthController {
@@ -22,7 +23,7 @@ export default class AuthController {
       },
     });
 
-    if (!user || user.password !== password) {
+    if (!user || !(await bcrypt.compare(password, user.password))) {
       return ApiResponse.unauthorized(res, "Invalid credentials");
     }
 
@@ -37,6 +38,29 @@ export default class AuthController {
 
     // Send access token in response body
     return ApiResponse.success(res, { accessToken: tokens.accessToken });
+  }
+
+  static async register(
+    req: Request<{}, {}, RegisterInput["body"]>,
+    res: Response
+  ) {
+    const { email, name, password } = req.body;
+
+    const userExists = await prisma.user.findUnique({
+      where: { email },
+    });
+
+    if (userExists) {
+      return ApiResponse.badRequest(res, "User already exists");
+    }
+
+    const hashedPassword = await bcrypt.hash(password, 10);
+
+    await prisma.user.create({
+      data: { email, name, password: hashedPassword },
+    });
+
+    return ApiResponse.success(res, "User created successfully");
   }
 
   static async refresh(req: Request, res: Response) {
