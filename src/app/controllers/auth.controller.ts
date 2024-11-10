@@ -1,13 +1,9 @@
 import ApiResponse from "@/lib/core/api-response";
 import env from "@/lib/core/env";
 import prisma from "@/lib/core/prisma";
-import {
-  generateTokens,
-  getRefreshTokenExpiryMs,
-  verifyRefreshToken,
-} from "@/lib/utils";
+import { getRefreshTokenExpiryMs } from "@/lib/utils";
 import { LoginInput, RegisterInput } from "@/lib/validations/auth.validation";
-import bcrypt from "bcrypt";
+import { AuthService } from "@/services";
 import { CookieOptions, Request, Response } from "express";
 
 export default class AuthController {
@@ -23,60 +19,37 @@ export default class AuthController {
     req: Request<unknown, unknown, LoginInput["body"]>,
     res: Response
   ) {
-    const { email, password } = req.body;
+    const tokens = await AuthService.login(
+      req.body.email,
+      req.body.password,
+      req.ip,
+      req.headers["user-agent"]
+    );
 
-    const user = await prisma.user.findUnique({
-      where: {
-        email,
-      },
-    });
-
-    if (!user || !(await bcrypt.compare(password, user.password))) {
+    if (!tokens) {
       return ApiResponse.unauthorized(res, "Invalid credentials");
     }
 
-    const tokens = generateTokens({ userId: user.id });
-
-    await prisma.refreshToken.create({
-      data: {
-        token: tokens.refreshToken,
-        userId: user.id,
-        ipAddress: req.ip,
-        userAgent: req.headers["user-agent"],
-        expiresAt: new Date(Date.now() + getRefreshTokenExpiryMs()),
-      },
-    });
-
-    // Set refresh token as httpOnly cookie
     res.cookie(
       "refresh_token",
       tokens.refreshToken,
       AuthController.REFRESH_TOKEN_COOKIE_OPTIONS
     );
 
-    // Send access token in response body
-    return ApiResponse.success(res, { accessToken: tokens.accessToken });
+    return ApiResponse.success(res, {
+      accessToken: tokens.accessToken,
+    });
   }
 
   static async register(
     req: Request<unknown, unknown, RegisterInput["body"]>,
     res: Response
   ) {
-    const { email, name, password } = req.body;
+    const result = await AuthService.register(req.body);
 
-    const userExists = await prisma.user.findUnique({
-      where: { email },
-    });
-
-    if (userExists) {
+    if (!result) {
       return ApiResponse.badRequest(res, "User already exists");
     }
-
-    const hashedPassword = await bcrypt.hash(password, 10);
-
-    await prisma.user.create({
-      data: { email, name, password: hashedPassword },
-    });
 
     return ApiResponse.success(res, "User created successfully");
   }
@@ -89,36 +62,16 @@ export default class AuthController {
         return ApiResponse.unauthorized(res, "Refresh token is required");
       }
 
-      const tokenRecord = await prisma.refreshToken.findUnique({
-        where: { token: refreshToken },
-      });
+      const tokens = await AuthService.refresh(
+        refreshToken,
+        req.ip,
+        req.headers["user-agent"]
+      );
 
-      if (
-        !tokenRecord ||
-        !tokenRecord.isValid ||
-        tokenRecord.expiresAt < new Date()
-      ) {
-        if (tokenRecord) {
-          await prisma.refreshToken.delete({ where: { id: tokenRecord.id } });
-        }
+      if (!tokens) {
         return ApiResponse.unauthorized(res, "Invalid refresh token");
       }
 
-      const decoded = verifyRefreshToken(refreshToken);
-      const tokens = generateTokens({ userId: decoded.userId });
-
-      await prisma.refreshToken.delete({ where: { id: tokenRecord.id } });
-      await prisma.refreshToken.create({
-        data: {
-          token: tokens.refreshToken,
-          userId: decoded.userId,
-          expiresAt: new Date(Date.now() + getRefreshTokenExpiryMs()),
-          ipAddress: req.ip,
-          userAgent: req.headers["user-agent"],
-        },
-      });
-
-      // set new refresh token as httpOnly cookie
       res.cookie(
         "refresh_token",
         tokens.refreshToken,
