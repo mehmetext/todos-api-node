@@ -96,13 +96,15 @@ export default class LabelService {
 
     if (!label) return null;
 
-    await CacheService.set(labelCacheKey, label, this.CACHE_TTL);
-
-    return {
+    const labelWithTodoCount = {
       ...label,
       todoCount: label._count.todos,
       _count: undefined,
     };
+
+    await CacheService.set(labelCacheKey, labelWithTodoCount, this.CACHE_TTL);
+
+    return labelWithTodoCount;
   }
 
   static async createLabel(userId: string, data: CreateLabelInput["body"]) {
