@@ -12,7 +12,8 @@ export default class TodosController {
     req: Request<unknown, unknown, unknown, GetTodosInput["query"]>,
     res: Response
   ) {
-    const { sort, q } = req.query;
+    const { sort, q, page = 1 } = req.query;
+    const skip = (page - 1) * 2;
 
     const todos = await prisma.todo.findMany({
       select: {
@@ -45,6 +46,8 @@ export default class TodosController {
         ...(sort === "ascByContent" && { content: "asc" }),
         ...(sort === "descByContent" && { content: "desc" }),
       },
+      skip,
+      take: 2,
     });
 
     return ApiResponse.success(res, todos);

@@ -38,6 +38,7 @@ export const getTodosSchema = z.object({
       ])
       .optional(),
     q: z.string().optional(),
+    page: z.coerce.number().min(1).optional(),
   }),
 });
 
