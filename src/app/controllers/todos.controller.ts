@@ -15,6 +15,14 @@ export default class TodosController {
     const { sort, q } = req.query;
 
     const todos = await prisma.todo.findMany({
+      select: {
+        id: true,
+        title: true,
+        content: true,
+        completed: true,
+        createdAt: true,
+        updatedAt: true,
+      },
       where: {
         deletedAt: null,
         userId: req.user!.id,
