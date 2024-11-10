@@ -5,7 +5,15 @@ export default function requestLoggerMiddleware(
   res: Response,
   next: NextFunction
 ) {
-  console.log(`${req.method} ${req.url} - ${res.statusCode}`);
+  const start = performance.now();
+  const reqUrl = req.url;
+
+  res.on("finish", () => {
+    const duration = performance.now() - start;
+    console.log(
+      `${req.method} ${reqUrl} | ${res.statusCode} | ${duration.toFixed(2)}ms`
+    );
+  });
 
   next();
 }
