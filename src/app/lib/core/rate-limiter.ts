@@ -6,7 +6,7 @@ import { ERROR_CODES } from "./error-codes";
 
 const options = {
   windowMs: 15 * 60 * 1000, // 15 minutes
-  max: 1,
+  max: 50,
   skip: () => env.NODE_ENV === "development",
   handler: (req: Request, res: Response) => {
     ApiResponse.error(
