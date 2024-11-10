@@ -3,15 +3,42 @@ import { CreateLabelInput, UpdateLabelInput } from "@/lib/validations";
 
 export default class LabelService {
   static async getLabels(userId: string) {
-    return prisma.label.findMany({
+    const labels = await prisma.label.findMany({
+      select: {
+        id: true,
+        name: true,
+        color: true,
+        _count: {
+          select: { todos: true },
+        },
+      },
       where: { userId, deletedAt: null },
     });
+    return labels.map((label) => ({
+      ...label,
+      todoCount: label._count.todos,
+      _count: undefined,
+    }));
   }
 
   static async getLabelById(userId: string, id: string) {
-    return prisma.label.findUnique({
+    const label = await prisma.label.findUnique({
+      select: {
+        id: true,
+        name: true,
+        color: true,
+        _count: { select: { todos: true } },
+      },
       where: { deletedAt: null, id, userId },
     });
+
+    if (!label) return null;
+
+    return {
+      ...label,
+      todoCount: label._count.todos,
+      _count: undefined,
+    };
   }
 
   static async createLabel(userId: string, data: CreateLabelInput["body"]) {
