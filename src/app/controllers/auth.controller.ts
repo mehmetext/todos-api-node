@@ -29,6 +29,16 @@ export default class AuthController {
 
     const tokens = generateTokens({ userId: user.id });
 
+    await prisma.refreshToken.create({
+      data: {
+        token: tokens.refreshToken,
+        userId: user.id,
+        ipAddress: req.ip,
+        userAgent: req.headers["user-agent"],
+        expiresAt: new Date(Date.now() + 7 * 24 * 60 * 60 * 1000),
+      },
+    });
+
     // Set refresh token as httpOnly cookie
     res.cookie(
       "refresh_token",
@@ -71,8 +81,34 @@ export default class AuthController {
         return ApiResponse.unauthorized(res, "Refresh token is required");
       }
 
+      const tokenRecord = await prisma.refreshToken.findUnique({
+        where: { token: refreshToken },
+      });
+
+      if (
+        !tokenRecord ||
+        !tokenRecord.isValid ||
+        tokenRecord.expiresAt < new Date()
+      ) {
+        if (tokenRecord) {
+          await prisma.refreshToken.delete({ where: { id: tokenRecord.id } });
+        }
+        return ApiResponse.unauthorized(res, "Invalid refresh token");
+      }
+
       const decoded = verifyRefreshToken(refreshToken);
       const tokens = generateTokens({ userId: decoded.userId });
+
+      await prisma.refreshToken.delete({ where: { id: tokenRecord.id } });
+      await prisma.refreshToken.create({
+        data: {
+          token: tokens.refreshToken,
+          userId: decoded.userId,
+          expiresAt: new Date(Date.now() + 7 * 24 * 60 * 60 * 1000),
+          ipAddress: req.ip,
+          userAgent: req.headers["user-agent"],
+        },
+      });
 
       // set new refresh token as httpOnly cookie
       res.cookie(
@@ -88,6 +124,12 @@ export default class AuthController {
   }
 
   static async logout(req: Request, res: Response) {
+    const refreshToken = req.cookies.refresh_token;
+
+    if (refreshToken) {
+      await prisma.refreshToken.delete({ where: { token: refreshToken } });
+    }
+
     res.clearCookie(
       "refresh_token",
       AuthController.REFRESH_TOKEN_COOKIE_OPTIONS
