@@ -13,6 +13,7 @@
 - Full type safety with TypeScript | TypeScript ile tam tip güvenliği
 - JWT-based authentication (Access & Refresh tokens) | JWT tabanlı kimlik doğrulama
 - PostgreSQL database with Prisma ORM | PostgreSQL veritabanı (Prisma ORM)
+- Redis caching for improved performance | Redis önbellekleme ile performans iyileştirmesi
 - Request validation with Zod | Zod ile request validasyonu
 - Rate limiting and CORS protection | Rate limiting ve CORS koruması
 - Advanced error handling and logging | Detaylı hata yönetimi ve loglama
@@ -24,6 +25,7 @@
 - Helmet security middleware | Helmet güvenlik middleware'i
 - HPP (HTTP Parameter Pollution) protection | HPP koruması
 - Express async error handling | Express async hata yönetimi
+- Cache invalidation on updates | Güncellemelerde önbellek invalidasyonu
 
 ## 🛠️ Tech Stack | Teknoloji Yığını
 
@@ -32,6 +34,7 @@
 - Node.js & Express.js
 - TypeScript
 - PostgreSQL & Prisma ORM
+- Redis
 
 ### Security | Güvenlik
 
@@ -69,13 +72,19 @@ pnpm install
 cp .env.example .env.local
 ```
 
-4. Run database migrations | Veritabanı migration'larını çalıştırın
+4. Start Redis server | Redis sunucusunu başlatın
+
+```bash
+redis-server
+```
+
+5. Run database migrations | Veritabanı migration'larını çalıştırın
 
 ```bash
 pnpm prisma:migrate
 ```
 
-5. Start development server | Geliştirme modunda başlatın
+6. Start development server | Geliştirme modunda başlatın
 
 ```bash
 pnpm dev
