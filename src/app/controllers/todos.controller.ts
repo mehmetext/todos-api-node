@@ -1,4 +1,5 @@
 import ApiResponse from "@/lib/core/api-response";
+import { DEFAULT_PAGE_SIZE } from "@/lib/core/options";
 import prisma from "@/lib/core/prisma";
 import {
   CreateTodoInput,
@@ -13,44 +14,66 @@ export default class TodosController {
     res: Response
   ) {
     const { sort, q, page = 1 } = req.query;
-    const skip = (page - 1) * 2;
+    const skip = (page - 1) * DEFAULT_PAGE_SIZE;
 
-    const todos = await prisma.todo.findMany({
-      select: {
-        id: true,
-        title: true,
-        content: true,
-        completed: true,
-        createdAt: true,
-        updatedAt: true,
+    const [todos, total] = await Promise.all([
+      prisma.todo.findMany({
+        select: {
+          id: true,
+          title: true,
+          content: true,
+          completed: true,
+          createdAt: true,
+          updatedAt: true,
+        },
+        where: {
+          deletedAt: null,
+          userId: req.user!.id,
+          ...(q && {
+            OR: [
+              { title: { contains: q, mode: "insensitive" } },
+              { content: { contains: q, mode: "insensitive" } },
+            ],
+          }),
+        },
+        orderBy: {
+          ...(sort === "ascByCreatedAt" && { createdAt: "asc" }),
+          ...(sort === "descByCreatedAt" && { createdAt: "desc" }),
+          ...(sort === "ascByUpdatedAt" && { updatedAt: "asc" }),
+          ...(sort === "descByUpdatedAt" && { updatedAt: "desc" }),
+          ...(sort === "ascByCompleted" && { completed: "asc" }),
+          ...(sort === "descByCompleted" && { completed: "desc" }),
+          ...(sort === "ascByTitle" && { title: "asc" }),
+          ...(sort === "descByTitle" && { title: "desc" }),
+          ...(sort === "ascByContent" && { content: "asc" }),
+          ...(sort === "descByContent" && { content: "desc" }),
+        },
+        skip,
+        take: DEFAULT_PAGE_SIZE,
+      }),
+      prisma.todo.count({
+        where: {
+          deletedAt: null,
+          userId: req.user!.id,
+          ...(q && {
+            OR: [
+              { title: { contains: q, mode: "insensitive" } },
+              { content: { contains: q, mode: "insensitive" } },
+            ],
+          }),
+        },
+      }),
+    ]);
+
+    return ApiResponse.success(res, {
+      pagination: {
+        total,
+        totalPage: Math.ceil(total / DEFAULT_PAGE_SIZE),
+        hasNext: skip + DEFAULT_PAGE_SIZE < total,
+        hasPrev: skip > 0,
       },
-      where: {
-        deletedAt: null,
-        userId: req.user!.id,
-        ...(q && {
-          OR: [
-            { title: { contains: q, mode: "insensitive" } },
-            { content: { contains: q, mode: "insensitive" } },
-          ],
-        }),
-      },
-      orderBy: {
-        ...(sort === "ascByCreatedAt" && { createdAt: "asc" }),
-        ...(sort === "descByCreatedAt" && { createdAt: "desc" }),
-        ...(sort === "ascByUpdatedAt" && { updatedAt: "asc" }),
-        ...(sort === "descByUpdatedAt" && { updatedAt: "desc" }),
-        ...(sort === "ascByCompleted" && { completed: "asc" }),
-        ...(sort === "descByCompleted" && { completed: "desc" }),
-        ...(sort === "ascByTitle" && { title: "asc" }),
-        ...(sort === "descByTitle" && { title: "desc" }),
-        ...(sort === "ascByContent" && { content: "asc" }),
-        ...(sort === "descByContent" && { content: "desc" }),
-      },
-      skip,
-      take: 2,
+      todos,
     });
-
-    return ApiResponse.success(res, todos);
   }
 
   static async getTodoById(req: Request<{ id: string }>, res: Response) {
