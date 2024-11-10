@@ -87,17 +87,24 @@
               }
             ],
             "url": {
-              "raw": "{{baseUrl}}/api/todos?sort=descByCreatedAt&q=test",
+              "raw": "{{baseUrl}}/api/todos?sort=descByCreatedAt&q=test&page=1",
               "host": ["{{baseUrl}}"],
               "path": ["api", "todos"],
               "query": [
                 {
                   "key": "sort",
-                  "value": "descByCreatedAt"
+                  "value": "descByCreatedAt",
+                  "description": "Sıralama seçenekleri: ascByCreatedAt, descByCreatedAt, ascByUpdatedAt, descByUpdatedAt, ascByCompleted, descByCompleted, ascByTitle, descByTitle, ascByContent, descByContent"
                 },
                 {
                   "key": "q",
-                  "value": "test"
+                  "value": "test",
+                  "description": "Arama terimi"
+                },
+                {
+                  "key": "page",
+                  "value": "1",
+                  "description": "Sayfa numarası"
                 }
               ]
             }
@@ -211,7 +218,7 @@
   "variable": [
     {
       "key": "baseUrl",
-      "value": "http://localhost:3000"
+      "value": "http://localhost:3030"
     },
     {
       "key": "accessToken",
