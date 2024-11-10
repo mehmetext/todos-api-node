@@ -1,6 +1,10 @@
 import ApiResponse from "@/lib/core/api-response";
 import prisma from "@/lib/core/prisma";
-import { generateTokens, verifyRefreshToken } from "@/lib/utils";
+import {
+  generateTokens,
+  getRefreshTokenExpiryMs,
+  verifyRefreshToken,
+} from "@/lib/utils";
 import { LoginInput, RegisterInput } from "@/lib/validations/auth.validation";
 import bcrypt from "bcrypt";
 import { CookieOptions, Request, Response } from "express";
@@ -10,7 +14,7 @@ export default class AuthController {
     httpOnly: true,
     secure: process.env.NODE_ENV === "production",
     sameSite: "strict",
-    maxAge: 7 * 24 * 60 * 60 * 1000, // 7 days
+    maxAge: getRefreshTokenExpiryMs(),
     path: "/api/auth",
   };
 
@@ -38,7 +42,7 @@ export default class AuthController {
         userId: user.id,
         ipAddress: req.ip,
         userAgent: req.headers["user-agent"],
-        expiresAt: new Date(Date.now() + 7 * 24 * 60 * 60 * 1000),
+        expiresAt: new Date(Date.now() + getRefreshTokenExpiryMs()),
       },
     });
 
@@ -107,7 +111,7 @@ export default class AuthController {
         data: {
           token: tokens.refreshToken,
           userId: decoded.userId,
-          expiresAt: new Date(Date.now() + 7 * 24 * 60 * 60 * 1000),
+          expiresAt: new Date(Date.now() + getRefreshTokenExpiryMs()),
           ipAddress: req.ip,
           userAgent: req.headers["user-agent"],
         },

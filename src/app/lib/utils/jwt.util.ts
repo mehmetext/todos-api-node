@@ -1,4 +1,5 @@
 import jwt from "jsonwebtoken";
+import ms from "ms";
 import { env } from ".";
 import { IAuthTokens, ITokenPayload } from "../types/auth.types";
 
@@ -20,4 +21,8 @@ export const verifyAccessToken = (token: string): ITokenPayload => {
 
 export const verifyRefreshToken = (token: string): ITokenPayload => {
   return jwt.verify(token, env.JWT_REFRESH_SECRET) as ITokenPayload;
+};
+
+export const getRefreshTokenExpiryMs = (): number => {
+  return ms(env.JWT_REFRESH_EXPIRES_IN);
 };
