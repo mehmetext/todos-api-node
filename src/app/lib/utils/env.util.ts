@@ -17,7 +17,9 @@ const env = {
   PORT: process.env.PORT || 3030,
   CORS_ORIGINS: process.env.CORS_ORIGINS || "http://localhost:3000",
   JWT_SECRET: process.env.JWT_SECRET || "secret",
-  JWT_EXPIRES_IN: process.env.JWT_EXPIRES_IN || "1h",
+  JWT_ACCESS_EXPIRES_IN: process.env.JWT_ACCESS_EXPIRES_IN || "1h",
+  JWT_REFRESH_SECRET: process.env.JWT_REFRESH_SECRET || "secret",
+  JWT_REFRESH_EXPIRES_IN: process.env.JWT_REFRESH_EXPIRES_IN || "7d",
 };
 
 export default env;

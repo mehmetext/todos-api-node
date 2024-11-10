@@ -1,6 +1,6 @@
 import ApiResponse from "@/lib/core/api-response";
 import { IAuthRequest } from "@/lib/types/auth.types";
-import { verifyToken } from "@/lib/utils";
+import { verifyAccessToken } from "@/lib/utils";
 import { NextFunction, Response } from "express";
 
 export default function authMiddleware(
@@ -16,7 +16,7 @@ export default function authMiddleware(
     }
 
     const token = authHeader.split(" ")[1];
-    const decoded = verifyToken(token);
+    const decoded = verifyAccessToken(token);
 
     // Normalde burada user service'den kullanıcı bilgileri alınır
     req.user = {
