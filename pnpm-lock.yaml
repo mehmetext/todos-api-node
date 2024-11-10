@@ -35,6 +35,9 @@ importers:
       module-alias:
         specifier: ^2.2.3
         version: 2.2.3
+      ms:
+        specifier: ^2.1.3
+        version: 2.1.3
       pg:
         specifier: ^8.13.1
         version: 8.13.1
@@ -72,6 +75,9 @@ importers:
       '@types/module-alias':
         specifier: ^2.0.4
         version: 2.0.4
+      '@types/ms':
+        specifier: ^0.7.34
+        version: 0.7.34
       '@types/pg':
         specifier: ^8.11.10
         version: 8.11.10
@@ -231,6 +237,9 @@ packages:
 
   '@types/module-alias@2.0.4':
     resolution: {integrity: sha512-5+G/QXO/DvHZw60FjvbDzO4JmlD/nG5m2/vVGt25VN1eeP3w2bCoks1Wa7VuptMPM1TxJdx6RjO70N9Fw0nZPA==}
+
+  '@types/ms@0.7.34':
+    resolution: {integrity: sha512-nG96G3Wp6acyAgJqGasjODb+acrI7KltPiRxzHPXnP3NgI28bpQDRv53olbqGXbfcgF5aiiHmO3xpwEpS5Ld9g==}
 
   '@types/node@22.9.0':
     resolution: {integrity: sha512-vuyHg81vvWA1Z1ELfvLko2c8f34gyA0zaic0+Rllc5lbCnbSyuvb2Oxpm6TAUAC/2xZN3QGqxBNggD1nNR2AfQ==}
@@ -1498,6 +1507,8 @@ snapshots:
   '@types/mime@1.3.5': {}
 
   '@types/module-alias@2.0.4': {}
+
+  '@types/ms@0.7.34': {}
 
   '@types/node@22.9.0':
     dependencies:
