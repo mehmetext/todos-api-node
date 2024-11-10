@@ -7,71 +7,46 @@ Bu proje, modern web geliştirme pratiklerini ve güvenlik önlemlerini içeren,
 ## 💫 Özellikler
 
 - TypeScript ile tam tip güvenliği
-- JWT tabanlı kimlik doğrulama sistemi
-- Access ve Refresh token yapısı
+- JWT tabanlı kimlik doğrulama sistemi (Access & Refresh token)
 - PostgreSQL veritabanı (Prisma ORM)
 - Zod ile request validasyonu
 - Rate limiting ve CORS koruması
-- Detaylı hata yönetimi
-- Request loglama
-- Todo'lar için filtreleme ve sayfalama
+- Detaylı hata yönetimi ve loglama
+- Todo'lar için gelişmiş filtreleme ve sayfalama
 - Çevresel değişken yönetimi
+- Soft delete desteği
+- Güvenli cookie yönetimi
+- API response standardizasyonu
 
-## 🛠️ Kullanılan Teknolojiler
+## 🛠️ Teknoloji Yığını
+
+### Ana Teknolojiler
 
 - Node.js & Express.js
 - TypeScript
 - PostgreSQL & Prisma ORM
+
+### Güvenlik
+
 - JWT (JSON Web Tokens)
-- Zod Validation
-- Bcrypt
+- Bcrypt (Şifreleme)
 - CORS & Cookie Parser
 - Express Rate Limit
 
+### Geliştirme Araçları
+
+- ESLint (Kod kalitesi)
+- Prettier (Kod formatı)
+- dotenv (Çevresel değişkenler)
+- pnpm (Paket yöneticisi)
+
 ## 📦 Kurulum
 
-1. Repoyu klonlayın:
-
-```bash
-git clone https://github.com/yourusername/todos-api-node.git
-cd todos-api-node
-```
-
-2. Bağımlılıkları yükleyin:
-
-```bash
-pnpm install
-```
-
-3. `.env.example` dosyasını `.env.local` olarak kopyalayın:
-
-```bash
-cp .env.example .env.local
-```
-
-4. `.env.local` dosyasını düzenleyin:
-
-```env
-PORT=3030
-DATABASE_URL="postgresql://user:password@localhost:5432/todosdb"
-CORS_ORIGINS=http://localhost:3000
-JWT_SECRET=your-secret-key
-JWT_REFRESH_SECRET=your-refresh-secret-key
-JWT_ACCESS_EXPIRES_IN=15m
-JWT_REFRESH_EXPIRES_IN=7d
-```
-
-5. Veritabanı migration'larını çalıştırın:
-
-```bash
-pnpm prisma:migrate
-```
-
-6. Geliştirme modunda başlatın:
-
-```bash
-pnpm dev
-```
+1. Repoyu klonlayın
+2. Bağımlılıkları yükleyin: `pnpm install`
+3. Çevresel değişkenleri ayarlayın: `.env.example` → `.env.local`
+4. Veritabanı migration'larını çalıştırın: `pnpm prisma:migrate`
+5. Geliştirme modunda başlatın: `pnpm dev`
 
 ## 🔑 API Endpoints
 
@@ -84,13 +59,34 @@ pnpm dev
 
 ### Todo İşlemleri
 
-- `GET /api/todos` - Todo listesi (filtreleme & sayfalama)
+- `GET /api/todos` - Todo listesi
+  - Query Parameters:
+    - `sort`: Sıralama seçenekleri (örn: descByCreatedAt)
+    - `q`: Arama terimi
+    - `page`: Sayfa numarası
 - `GET /api/todos/:id` - Tek bir todo detayı
 - `POST /api/todos` - Yeni todo oluşturma
 - `PUT /api/todos/:id` - Todo güncelleme
-- `DELETE /api/todos/:id` - Todo silme
+- `DELETE /api/todos/:id` - Todo silme (soft delete)
 
-## 🔒 Güvenlik Önlemleri
+## 🏗️ Proje Yapısı
+
+```
+src/
+├── app/
+│   ├── controllers/    # API endpoint işleyicileri
+│   ├── middlewares/    # Express middleware'leri
+│   ├── routes/         # API route tanımlamaları
+│   ├── services/       # İş mantığı katmanı
+│   └── lib/
+│       ├── core/       # Çekirdek yapılandırmalar
+│       ├── types/      # TypeScript tip tanımlamaları
+│       ├── utils/      # Yardımcı fonksiyonlar
+│       ├── constants/  # Sabit değerler
+│       └── validations/# Request şema validasyonları
+```
+
+## 🔒 Güvenlik Özellikleri
 
 - JWT tabanlı authentication
 - HttpOnly cookie ile refresh token yönetimi
@@ -99,21 +95,19 @@ pnpm dev
 - Input validasyonu
 - Password hashing (bcrypt)
 - Error handling ve sanitization
+- Güvenli HTTP başlıkları
 
-## 🧪 Proje Yapısı
+## 📚 API Dokümantasyonu
 
-```
-src/
-├── app/
-│   ├── controllers/    # API endpoint işleyicileri
-│   ├── middlewares/    # Express middleware'leri
-│   ├── routes/         # API route tanımlamaları
-│   └── lib/
-│       ├── core/       # Çekirdek yapılandırmalar
-│       ├── types/      # TypeScript tip tanımlamaları
-│       ├── utils/      # Yardımcı fonksiyonlar
-│       └── validations/# Request şema validasyonları
-```
+API endpoint'lerini test etmek için `/docs/todos-api.postman_collection.json` dizininde Postman Collection bulunmaktadır.
+
+## 🧪 Veritabanı Şeması
+
+Proje üç ana model içerir:
+
+- User: Kullanıcı bilgileri
+- Todo: Görev kayıtları
+- RefreshToken: Token yönetimi
 
 ## 📝 Geliştirme Notu
 
@@ -130,7 +124,3 @@ Bu proje halen geliştirme aşamasındadır ve öğrenim amacıyla oluşturulmu�
 ## 📄 Lisans
 
 Bu proje MIT lisansı altında lisanslanmıştır. Detaylar için [LICENSE](LICENSE) dosyasına bakınız.
-
-## 📚 API Dokümantasyonu
-
-API endpoint'lerini test etmek için `/docs/todos-api.postman_collection.json` dizininde bir Postman Collection bulunmaktadır. Bu collection'ı Postman'e import ederek API'yi test edebilirsiniz.
