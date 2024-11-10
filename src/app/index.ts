@@ -1,6 +1,7 @@
 import cookieParser from "cookie-parser";
 import cors from "cors";
 import express, { Application } from "express";
+import "express-async-errors";
 import helmet from "helmet";
 import hpp from "hpp";
 import corsOptions from "./lib/core/cors";
