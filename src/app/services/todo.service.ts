@@ -5,11 +5,23 @@ import {
   GetTodosInput,
   UpdateTodoInput,
 } from "@/lib/validations";
+import { Prisma } from "@prisma/client";
 
 export default class TodoService {
   static async getTodos(userId: string, query: GetTodosInput["query"]) {
     const { sort, q, page = 1 } = query;
     const skip = (page - 1) * API.PAGINATION.DEFAULT_PAGE_SIZE;
+
+    const whereClause: Prisma.TodoWhereInput = {
+      deletedAt: null,
+      userId,
+      ...(q && {
+        OR: [
+          { title: { contains: q, mode: "insensitive" } },
+          { content: { contains: q, mode: "insensitive" } },
+        ],
+      }),
+    };
 
     const [todos, total] = await Promise.all([
       prisma.todo.findMany({
@@ -21,16 +33,7 @@ export default class TodoService {
           createdAt: true,
           updatedAt: true,
         },
-        where: {
-          deletedAt: null,
-          userId,
-          ...(q && {
-            OR: [
-              { title: { contains: q, mode: "insensitive" } },
-              { content: { contains: q, mode: "insensitive" } },
-            ],
-          }),
-        },
+        where: whereClause,
         orderBy: {
           ...(sort === "ascByCreatedAt" && { createdAt: "asc" }),
           ...(sort === "descByCreatedAt" && { createdAt: "desc" }),
@@ -46,18 +49,7 @@ export default class TodoService {
         skip,
         take: API.PAGINATION.DEFAULT_PAGE_SIZE,
       }),
-      prisma.todo.count({
-        where: {
-          deletedAt: null,
-          userId,
-          ...(q && {
-            OR: [
-              { title: { contains: q, mode: "insensitive" } },
-              { content: { contains: q, mode: "insensitive" } },
-            ],
-          }),
-        },
-      }),
+      prisma.todo.count({ where: whereClause }),
     ]);
 
     return {
