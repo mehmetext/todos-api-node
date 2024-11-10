@@ -2,125 +2,127 @@
 
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
 
-Bu proje, modern web geliştirme pratiklerini ve güvenlik önlemlerini içeren, Node.js ve TypeScript tabanlı bir RESTful Todo API'sidir. Öğrenim amacıyla geliştirilmekte olan bu proje, gerçek dünya uygulamalarında kullanılan best practice'leri içermektedir.
+## 🌟 Overview | Genel Bakış
 
-## 💫 Özellikler
+**EN**: This project is a RESTful Todo API built with Node.js and TypeScript, incorporating modern web development practices and security measures. It's being developed for learning purposes and includes real-world best practices.
 
-- TypeScript ile tam tip güvenliği
-- JWT tabanlı kimlik doğrulama sistemi (Access & Refresh token)
-- PostgreSQL veritabanı (Prisma ORM)
-- Zod ile request validasyonu
-- Rate limiting ve CORS koruması
-- Detaylı hata yönetimi ve loglama
-- Todo'lar için gelişmiş filtreleme ve sayfalama
-- Çevresel değişken yönetimi
-- Soft delete desteği
-- Güvenli cookie yönetimi
-- API response standardizasyonu
+**TR**: Bu proje, modern web geliştirme pratiklerini ve güvenlik önlemlerini içeren, Node.js ve TypeScript tabanlı bir RESTful Todo API'sidir. Öğrenim amacıyla geliştirilmekte olan bu proje, gerçek dünya uygulamalarında kullanılan best practice'leri içermektedir.
 
-## 🛠️ Teknoloji Yığını
+## 💫 Features | Özellikler
 
-### Ana Teknolojiler
+- Full type safety with TypeScript | TypeScript ile tam tip güvenliği
+- JWT-based authentication (Access & Refresh tokens) | JWT tabanlı kimlik doğrulama
+- PostgreSQL database with Prisma ORM | PostgreSQL veritabanı (Prisma ORM)
+- Request validation with Zod | Zod ile request validasyonu
+- Rate limiting and CORS protection | Rate limiting ve CORS koruması
+- Advanced error handling and logging | Detaylı hata yönetimi ve loglama
+- Filtering and pagination for Todos | Todo'lar için filtreleme ve sayfalama
+- Environment variable management | Çevresel değişken yönetimi
+- Soft delete support | Soft delete desteği
+- Secure cookie management | Güvenli cookie yönetimi
+- Standardized API responses | API response standardizasyonu
+
+## 🛠️ Tech Stack | Teknoloji Yığını
+
+### Core Technologies | Ana Teknolojiler
 
 - Node.js & Express.js
 - TypeScript
 - PostgreSQL & Prisma ORM
 
-### Güvenlik
+### Security | Güvenlik
 
 - JWT (JSON Web Tokens)
-- Bcrypt (Şifreleme)
+- Bcrypt (Password Hashing)
 - CORS & Cookie Parser
 - Express Rate Limit
 
-### Geliştirme Araçları
+### Development Tools | Geliştirme Araçları
 
-- ESLint (Kod kalitesi)
-- Prettier (Kod formatı)
-- dotenv (Çevresel değişkenler)
-- pnpm (Paket yöneticisi)
+- ESLint (Code quality)
+- Prettier (Code formatting)
+- dotenv (Environment variables)
+- pnpm (Package manager)
 
-## 📦 Kurulum
+## 📦 Installation | Kurulum
 
-1. Repoyu klonlayın
-2. Bağımlılıkları yükleyin: `pnpm install`
-3. Çevresel değişkenleri ayarlayın: `.env.example` → `.env.local`
-4. Veritabanı migration'larını çalıştırın: `pnpm prisma:migrate`
-5. Geliştirme modunda başlatın: `pnpm dev`
+1. Clone the repository | Repoyu klonlayın
+
+```bash
+git clone <repository-url>
+```
+
+2. Install dependencies | Bağımlılıkları yükleyin
+
+```bash
+pnpm install
+```
+
+3. Set up environment variables | Çevresel değişkenleri ayarlayın
+
+```bash
+cp .env.example .env.local
+```
+
+4. Run database migrations | Veritabanı migration'larını çalıştırın
+
+```bash
+pnpm prisma:migrate
+```
+
+5. Start development server | Geliştirme modunda başlatın
+
+```bash
+pnpm dev
+```
 
 ## 🔑 API Endpoints
 
-### Kimlik Doğrulama
+### Authentication | Kimlik Doğrulama
 
-- `POST /api/auth/register` - Yeni kullanıcı kaydı
-- `POST /api/auth/login` - Kullanıcı girişi
-- `POST /api/auth/refresh` - Access token yenileme
-- `POST /api/auth/logout` - Çıkış yapma
+- `POST /api/auth/register` - Register new user | Yeni kullanıcı kaydı
+- `POST /api/auth/login` - User login | Kullanıcı girişi
+- `POST /api/auth/refresh` - Refresh access token | Access token yenileme
+- `POST /api/auth/logout` - Logout | Çıkış yapma
 
-### Todo İşlemleri
+### Todos
 
-- `GET /api/todos` - Todo listesi
+- `GET /api/todos` - List todos | Todo listesi
   - Query Parameters:
-    - `sort`: Sıralama seçenekleri (örn: descByCreatedAt)
-    - `q`: Arama terimi
-    - `page`: Sayfa numarası
-- `GET /api/todos/:id` - Tek bir todo detayı
-- `POST /api/todos` - Yeni todo oluşturma
-- `PUT /api/todos/:id` - Todo güncelleme
-- `DELETE /api/todos/:id` - Todo silme (soft delete)
+    - `sort`: Sorting options | Sıralama seçenekleri
+    - `q`: Search term | Arama terimi
+    - `page`: Page number | Sayfa numarası
+- `GET /api/todos/:id` - Get single todo | Tek bir todo detayı
+- `POST /api/todos` - Create todo | Yeni todo oluşturma
+- `PUT /api/todos/:id` - Update todo | Todo güncelleme
+- `DELETE /api/todos/:id` - Delete todo (soft delete) | Todo silme
 
-## 🏗️ Proje Yapısı
+### Labels | Etiketler
 
-```
-src/
-├── app/
-│   ├── controllers/    # API endpoint işleyicileri
-│   ├── middlewares/    # Express middleware'leri
-│   ├── routes/         # API route tanımlamaları
-│   ├── services/       # İş mantığı katmanı
-│   └── lib/
-│       ├── core/       # Çekirdek yapılandırmalar
-│       ├── types/      # TypeScript tip tanımlamaları
-│       ├── utils/      # Yardımcı fonksiyonlar
-│       ├── constants/  # Sabit değerler
-│       └── validations/# Request şema validasyonları
-```
+- `GET /api/labels` - List labels | Etiket listesi
+- `POST /api/labels` - Create label | Yeni etiket oluşturma
+- `PUT /api/labels/:id` - Update label | Etiket güncelleme
+- `DELETE /api/labels/:id` - Delete label | Etiket silme
 
-## 🔒 Güvenlik Özellikleri
+## 🔒 Security Features | Güvenlik Özellikleri
 
-- JWT tabanlı authentication
-- HttpOnly cookie ile refresh token yönetimi
-- Request rate limiting
-- CORS koruması
-- Input validasyonu
-- Password hashing (bcrypt)
-- Error handling ve sanitization
-- Güvenli HTTP başlıkları
+- JWT-based authentication | JWT tabanlı kimlik doğrulama
+- HttpOnly cookie for refresh tokens | HttpOnly cookie ile refresh token yönetimi
+- Request rate limiting | İstek sınırlama
+- CORS protection | CORS koruması
+- Input validation | Girdi doğrulama
+- Password hashing (bcrypt) | Şifre hashleme
+- Error handling and sanitization | Hata yönetimi ve sanitizasyon
+- Secure HTTP headers | Güvenli HTTP başlıkları
 
-## 📚 API Dokümantasyonu
+## 📝 Development Note | Geliştirme Notu
 
-API endpoint'lerini test etmek için `/docs/todos-api.postman_collection.json` dizininde Postman Collection bulunmaktadır.
+**EN**: This project is still under development and is created for learning purposes. It can be used as an example to learn and implement modern web development practices.
 
-## 🧪 Veritabanı Şeması
+**TR**: Bu proje halen geliştirme aşamasındadır ve öğrenim amacıyla oluşturulmuştur. Modern web geliştirme pratiklerini öğrenmek ve uygulamak için bir örnek olarak kullanılabilir.
 
-Proje üç ana model içerir:
+## 📄 License | Lisans
 
-- User: Kullanıcı bilgileri
-- Todo: Görev kayıtları
-- RefreshToken: Token yönetimi
+This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details.
 
-## 📝 Geliştirme Notu
-
-Bu proje halen geliştirme aşamasındadır ve öğrenim amacıyla oluşturulmuştur. Modern web geliştirme pratiklerini öğrenmek ve uygulamak için bir örnek olarak kullanılabilir.
-
-## 🤝 Katkıda Bulunma
-
-1. Fork edin
-2. Feature branch oluşturun (`git checkout -b feature/amazing-feature`)
-3. Değişikliklerinizi commit edin (`git commit -m 'feat: add amazing feature'`)
-4. Branch'inizi push edin (`git push origin feature/amazing-feature`)
-5. Pull Request oluşturun
-
-## 📄 Lisans
-
-Bu proje MIT lisansı altında lisanslanmıştır. Detaylar için [LICENSE](LICENSE) dosyasına bakınız.
+Bu proje MIT lisansı altında lisanslanmıştır - detaylar için [LICENSE](LICENSE) dosyasına bakınız.
