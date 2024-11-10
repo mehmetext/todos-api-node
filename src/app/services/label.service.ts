@@ -56,18 +56,20 @@ export default class LabelService {
       prisma.label.count({ where: { userId, deletedAt: null } }),
     ]);
 
+    const labelsWithTodoCount = labels.map((label) => ({
+      ...label,
+      todoCount: label._count.todos,
+      _count: undefined,
+    }));
+
     await Promise.all([
-      CacheService.set(listCacheKey, labels, this.CACHE_TTL),
+      CacheService.set(listCacheKey, labelsWithTodoCount, this.CACHE_TTL),
       CacheService.set(countCacheKey, total, this.CACHE_TTL),
     ]);
 
     return {
       pagination: calculatePagination(total, query.page),
-      labels: labels.map((label) => ({
-        ...label,
-        todoCount: label._count.todos,
-        _count: undefined,
-      })),
+      labels: labelsWithTodoCount,
     };
   }
 
