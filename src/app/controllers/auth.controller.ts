@@ -1,4 +1,5 @@
 import ApiResponse from "@/lib/core/api-response";
+import env from "@/lib/core/env";
 import prisma from "@/lib/core/prisma";
 import {
   generateTokens,
@@ -12,7 +13,7 @@ import { CookieOptions, Request, Response } from "express";
 export default class AuthController {
   static REFRESH_TOKEN_COOKIE_OPTIONS: CookieOptions = {
     httpOnly: true,
-    secure: process.env.NODE_ENV === "production",
+    secure: env.NODE_ENV === "production",
     sameSite: "strict",
     maxAge: getRefreshTokenExpiryMs(),
     path: "/api/auth",

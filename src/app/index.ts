@@ -2,8 +2,8 @@ import cookieParser from "cookie-parser";
 import cors from "cors";
 import express, { Application } from "express";
 import corsOptions from "./lib/core/cors";
+import env from "./lib/core/env";
 import rateLimiter from "./lib/core/rate-limiter";
-import { env } from "./lib/utils";
 import { errorHandlerMiddleware, requestLoggerMiddleware } from "./middlewares";
 import routes from "./routes";
 

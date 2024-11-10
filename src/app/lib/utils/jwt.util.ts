@@ -1,6 +1,6 @@
 import jwt from "jsonwebtoken";
 import ms from "ms";
-import { env } from ".";
+import env from "../core/env";
 import { IAuthTokens, ITokenPayload } from "../types/auth.types";
 
 export const generateTokens = (payload: ITokenPayload): IAuthTokens => {

@@ -1,7 +1,7 @@
 import { Request, Response } from "express";
 import rateLimit from "express-rate-limit";
-import { env } from "../utils";
 import ApiResponse from "./api-response";
+import env from "./env";
 import { ERROR_CODES } from "./error-codes";
 
 const options = {

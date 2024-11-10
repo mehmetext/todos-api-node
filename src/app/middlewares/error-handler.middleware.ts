@@ -1,6 +1,6 @@
 import ApiResponse from "@/lib/core/api-response";
+import env from "@/lib/core/env";
 import { ERROR_CODES } from "@/lib/core/error-codes";
-import { env } from "@/lib/utils";
 import { NextFunction, Request, Response } from "express";
 
 export default function errorHandlerMiddleware(
