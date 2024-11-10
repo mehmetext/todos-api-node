@@ -27,8 +27,9 @@ model Todo {
   userId String
   user   User   @relation(fields: [userId], references: [id])
 
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
+  createdAt DateTime  @default(now())
+  updatedAt DateTime  @updatedAt
+  deletedAt DateTime?
 
   @@index([userId])
 }

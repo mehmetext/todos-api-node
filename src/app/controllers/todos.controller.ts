@@ -16,6 +16,7 @@ export default class TodosController {
 
     const todos = await prisma.todo.findMany({
       where: {
+        deletedAt: null,
         userId: req.user!.id,
         ...(q && {
           OR: [
@@ -42,7 +43,7 @@ export default class TodosController {
   static async getTodoById(req: Request<{ id: string }>, res: Response) {
     const { id } = req.params;
     const todo = await prisma.todo.findUnique({
-      where: { id, userId: req.user!.id },
+      where: { deletedAt: null, id, userId: req.user!.id },
     });
 
     if (!todo) {
@@ -77,7 +78,7 @@ export default class TodosController {
     const { title, content, completed } = req.body;
 
     const todoExists = await prisma.todo.findUnique({
-      where: { id, userId: req.user!.id },
+      where: { deletedAt: null, id, userId: req.user!.id },
     });
 
     if (!todoExists) {
@@ -96,14 +97,17 @@ export default class TodosController {
     const { id } = req.params;
 
     const todoExists = await prisma.todo.findUnique({
-      where: { id, userId: req.user!.id },
+      where: { deletedAt: null, id, userId: req.user!.id },
     });
 
     if (!todoExists) {
       return ApiResponse.notFound(res, "Todo not found");
     }
 
-    await prisma.todo.delete({ where: { id } });
+    await prisma.todo.update({
+      where: { id },
+      data: { deletedAt: new Date() },
+    });
 
     return ApiResponse.success(res, null);
   }
