@@ -1,6 +1,8 @@
 import cookieParser from "cookie-parser";
 import cors from "cors";
 import express, { Application } from "express";
+import helmet from "helmet";
+import hpp from "hpp";
 import corsOptions from "./lib/core/cors";
 import env from "./lib/core/env";
 import rateLimiter from "./lib/core/rate-limiter";
@@ -11,6 +13,8 @@ import routes from "./routes";
 const app: Application = express();
 
 // Middlewares
+app.use(helmet());
+app.use(hpp());
 app.use(cors(corsOptions));
 app.use(cookieParser());
 app.use(rateLimiter);
