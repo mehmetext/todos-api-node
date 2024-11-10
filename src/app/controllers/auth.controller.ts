@@ -4,7 +4,7 @@ import { LoginInput } from "@/lib/validations/auth.validation";
 import { CookieOptions, Request, Response } from "express";
 
 export default class AuthController {
-  private static readonly REFRESH_TOKEN_COOKIE_OPTIONS: CookieOptions = {
+  static REFRESH_TOKEN_COOKIE_OPTIONS: CookieOptions = {
     httpOnly: true,
     secure: process.env.NODE_ENV === "production",
     sameSite: "strict",
@@ -12,7 +12,7 @@ export default class AuthController {
     path: "/api/auth",
   };
 
-  static async login(req: Request<{}, {}, LoginInput>, res: Response) {
+  static async login(req: Request<{}, {}, LoginInput["body"]>, res: Response) {
     const { email, password } = req.body;
 
     if (email === "test@test.com" && password === "test") {
@@ -22,7 +22,7 @@ export default class AuthController {
       res.cookie(
         "refresh_token",
         tokens.refreshToken,
-        this.REFRESH_TOKEN_COOKIE_OPTIONS
+        AuthController.REFRESH_TOKEN_COOKIE_OPTIONS
       );
 
       // Send access token in response body
@@ -47,7 +47,7 @@ export default class AuthController {
       res.cookie(
         "refresh_token",
         tokens.refreshToken,
-        this.REFRESH_TOKEN_COOKIE_OPTIONS
+        AuthController.REFRESH_TOKEN_COOKIE_OPTIONS
       );
 
       return ApiResponse.success(res, { accessToken: tokens.accessToken });
@@ -57,7 +57,10 @@ export default class AuthController {
   }
 
   static async logout(req: Request, res: Response) {
-    res.clearCookie("refresh_token", this.REFRESH_TOKEN_COOKIE_OPTIONS);
+    res.clearCookie(
+      "refresh_token",
+      AuthController.REFRESH_TOKEN_COOKIE_OPTIONS
+    );
     return ApiResponse.success(res, "Logged out successfully");
   }
 }
