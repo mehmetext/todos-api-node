@@ -87,7 +87,7 @@
               }
             ],
             "url": {
-              "raw": "{{baseUrl}}/api/todos?sort=descByCreatedAt&q=test&page=1",
+              "raw": "{{baseUrl}}/api/todos?sort=descByCreatedAt&q=test&page=1&labels=label1,label2",
               "host": ["{{baseUrl}}"],
               "path": ["api", "todos"],
               "query": [
@@ -105,6 +105,11 @@
                   "key": "page",
                   "value": "1",
                   "description": "Sayfa numarası"
+                },
+                {
+                  "key": "labels",
+                  "value": "label1,label2",
+                  "description": "Etiket ID'leri (virgülle ayrılmış)"
                 }
               ]
             }
@@ -127,7 +132,7 @@
               "variable": [
                 {
                   "key": "id",
-                  "value": "todo-id-here"
+                  "value": "todo-id"
                 }
               ]
             }
@@ -149,7 +154,7 @@
             ],
             "body": {
               "mode": "raw",
-              "raw": "{\n    \"title\": \"Test Todo\",\n    \"content\": \"This is a test todo item\"\n}"
+              "raw": "{\n    \"title\": \"Yeni Todo\",\n    \"content\": \"Todo içeriği\",\n    \"labels\": [\n        {\"id\": \"mevcut-label-id\"},\n        {\"name\": \"Yeni Label\"}\n    ]\n}"
             },
             "url": {
               "raw": "{{baseUrl}}/api/todos",
@@ -174,7 +179,7 @@
             ],
             "body": {
               "mode": "raw",
-              "raw": "{\n    \"title\": \"Updated Todo\",\n    \"content\": \"This todo has been updated\",\n    \"completed\": true\n}"
+              "raw": "{\n    \"title\": \"Güncellenmiş Todo\",\n    \"content\": \"Güncellenmiş içerik\",\n    \"completed\": true\n}"
             },
             "url": {
               "raw": "{{baseUrl}}/api/todos/:id",
@@ -183,7 +188,7 @@
               "variable": [
                 {
                   "key": "id",
-                  "value": "todo-id-here"
+                  "value": "todo-id"
                 }
               ]
             }
@@ -206,7 +211,7 @@
               "variable": [
                 {
                   "key": "id",
-                  "value": "todo-id-here"
+                  "value": "todo-id"
                 }
               ]
             }
@@ -228,9 +233,16 @@
               }
             ],
             "url": {
-              "raw": "{{baseUrl}}/api/labels",
+              "raw": "{{baseUrl}}/api/labels?page=1",
               "host": ["{{baseUrl}}"],
-              "path": ["api", "labels"]
+              "path": ["api", "labels"],
+              "query": [
+                {
+                  "key": "page",
+                  "value": "1",
+                  "description": "Sayfa numarası"
+                }
+              ]
             }
           }
         },
@@ -251,7 +263,7 @@
               "variable": [
                 {
                   "key": "id",
-                  "value": "label-id-here"
+                  "value": "label-id"
                 }
               ]
             }
@@ -273,7 +285,7 @@
             ],
             "body": {
               "mode": "raw",
-              "raw": "{\n    \"name\": \"Important\",\n    \"color\": \"#FF0000\"\n}"
+              "raw": "{\n    \"name\": \"Önemli\",\n    \"color\": \"#FF0000\"\n}"
             },
             "url": {
               "raw": "{{baseUrl}}/api/labels",
@@ -298,7 +310,7 @@
             ],
             "body": {
               "mode": "raw",
-              "raw": "{\n    \"name\": \"Very Important\",\n    \"color\": \"#FF0000\"\n}"
+              "raw": "{\n    \"name\": \"Çok Önemli\",\n    \"color\": \"#FF0000\"\n}"
             },
             "url": {
               "raw": "{{baseUrl}}/api/labels/:id",
@@ -307,7 +319,7 @@
               "variable": [
                 {
                   "key": "id",
-                  "value": "label-id-here"
+                  "value": "label-id"
                 }
               ]
             }
@@ -330,7 +342,7 @@
               "variable": [
                 {
                   "key": "id",
-                  "value": "label-id-here"
+                  "value": "label-id"
                 }
               ]
             }
