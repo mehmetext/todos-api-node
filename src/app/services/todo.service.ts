@@ -1,4 +1,4 @@
-import { DEFAULT_PAGE_SIZE } from "@/lib/core/options";
+import { API } from "@/lib/constants";
 import prisma from "@/lib/core/prisma";
 import {
   CreateTodoInput,
@@ -9,7 +9,7 @@ import {
 export default class TodoService {
   static async getTodos(userId: string, query: GetTodosInput["query"]) {
     const { sort, q, page = 1 } = query;
-    const skip = (page - 1) * DEFAULT_PAGE_SIZE;
+    const skip = (page - 1) * API.PAGINATION.DEFAULT_PAGE_SIZE;
 
     const [todos, total] = await Promise.all([
       prisma.todo.findMany({
@@ -44,7 +44,7 @@ export default class TodoService {
           ...(sort === "descByContent" && { content: "desc" }),
         },
         skip,
-        take: DEFAULT_PAGE_SIZE,
+        take: API.PAGINATION.DEFAULT_PAGE_SIZE,
       }),
       prisma.todo.count({
         where: {
@@ -63,8 +63,8 @@ export default class TodoService {
     return {
       pagination: {
         total,
-        totalPage: Math.ceil(total / DEFAULT_PAGE_SIZE),
-        hasNext: skip + DEFAULT_PAGE_SIZE < total,
+        totalPage: Math.ceil(total / API.PAGINATION.DEFAULT_PAGE_SIZE),
+        hasNext: skip + API.PAGINATION.DEFAULT_PAGE_SIZE < total,
         hasPrev: skip > 0,
       },
       todos,

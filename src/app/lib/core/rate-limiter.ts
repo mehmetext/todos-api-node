@@ -1,12 +1,12 @@
 import { Request, Response } from "express";
 import rateLimit from "express-rate-limit";
+import { ERROR_CODES, RATE_LIMITER } from "../constants";
 import ApiResponse from "./api-response";
 import env from "./env";
-import { ERROR_CODES } from "./error-codes";
 
 const options = {
-  windowMs: 15 * 60 * 1000, // 15 minutes
-  max: 50,
+  windowMs: RATE_LIMITER.WINDOW_MS, // 15 minutes
+  max: RATE_LIMITER.MAX_REQUESTS,
   skip: () => env.NODE_ENV === "development",
   handler: (req: Request, res: Response) => {
     ApiResponse.error(
@@ -16,8 +16,8 @@ const options = {
       429
     );
   },
-  standardHeaders: true,
-  legacyHeaders: false,
+  standardHeaders: RATE_LIMITER.HEADERS.STANDARD,
+  legacyHeaders: RATE_LIMITER.HEADERS.LEGACY,
 };
 
 export default rateLimit(options);

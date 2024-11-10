@@ -1,5 +1,5 @@
 import { Response } from "express";
-import { ERROR_CODES, ErrorCode, ErrorResponse } from "./error-codes";
+import { ERROR_CODES, ErrorCode, ErrorResponse } from "../constants";
 
 export default class ApiResponse {
   static success<T>(res: Response, data: T, statusCode: number = 200): void {

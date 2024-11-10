@@ -1,3 +1,4 @@
+import { AUTH } from "@/lib/constants/auth.constants";
 import ApiResponse from "@/lib/core/api-response";
 import env from "@/lib/core/env";
 import prisma from "@/lib/core/prisma";
@@ -8,11 +9,11 @@ import { CookieOptions, Request, Response } from "express";
 
 export default class AuthController {
   static REFRESH_TOKEN_COOKIE_OPTIONS: CookieOptions = {
-    httpOnly: true,
+    httpOnly: AUTH.COOKIE.OPTIONS.httpOnly,
     secure: env.NODE_ENV === "production",
-    sameSite: "strict",
+    sameSite: AUTH.COOKIE.OPTIONS.sameSite,
     maxAge: getRefreshTokenExpiryMs(),
-    path: "/api/auth",
+    path: AUTH.COOKIE.PATH,
   };
 
   static async login(
@@ -31,7 +32,7 @@ export default class AuthController {
     }
 
     res.cookie(
-      "refresh_token",
+      AUTH.COOKIE.NAME,
       tokens.refreshToken,
       AuthController.REFRESH_TOKEN_COOKIE_OPTIONS
     );
@@ -72,7 +73,7 @@ export default class AuthController {
     }
 
     res.cookie(
-      "refresh_token",
+      AUTH.COOKIE.NAME,
       tokens.refreshToken,
       AuthController.REFRESH_TOKEN_COOKIE_OPTIONS
     );
@@ -88,7 +89,7 @@ export default class AuthController {
     }
 
     res.clearCookie(
-      "refresh_token",
+      AUTH.COOKIE.NAME,
       AuthController.REFRESH_TOKEN_COOKIE_OPTIONS
     );
     return ApiResponse.success(res, "Logged out successfully");

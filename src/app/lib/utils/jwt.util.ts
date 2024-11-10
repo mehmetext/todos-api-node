@@ -1,15 +1,16 @@
 import jwt from "jsonwebtoken";
 import ms from "ms";
+import { AUTH } from "../constants";
 import env from "../core/env";
 import { IAuthTokens, ITokenPayload } from "../types/auth.types";
 
 export const generateTokens = (payload: ITokenPayload): IAuthTokens => {
   const accessToken = jwt.sign(payload, env.JWT_SECRET, {
-    expiresIn: env.JWT_ACCESS_EXPIRES_IN,
+    expiresIn: AUTH.TOKEN.DEFAULT_ACCESS_EXPIRY,
   });
 
   const refreshToken = jwt.sign(payload, env.JWT_REFRESH_SECRET, {
-    expiresIn: env.JWT_REFRESH_EXPIRES_IN,
+    expiresIn: AUTH.TOKEN.DEFAULT_REFRESH_EXPIRY,
   });
 
   return { accessToken, refreshToken };
@@ -24,5 +25,5 @@ export const verifyRefreshToken = (token: string): ITokenPayload => {
 };
 
 export const getRefreshTokenExpiryMs = (): number => {
-  return ms(env.JWT_REFRESH_EXPIRES_IN);
+  return ms(AUTH.TOKEN.DEFAULT_REFRESH_EXPIRY);
 };

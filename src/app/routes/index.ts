@@ -1,10 +1,11 @@
+import { API } from "@/lib/constants";
 import { Router } from "express";
 import auth from "./auth.route";
 import todos from "./todos.route";
 
 const router: Router = Router();
 
-router.use("/todos", todos);
-router.use("/auth", auth);
+router.use(API.ROUTES.BASE, todos);
+router.use(API.ROUTES.AUTH, auth);
 
 export default router;
