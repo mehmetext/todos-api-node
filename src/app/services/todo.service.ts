@@ -1,6 +1,10 @@
 import { API } from "@/lib/constants";
 import prisma from "@/lib/core/prisma";
-import { generateRandomHexColor } from "@/lib/utils";
+import {
+  calculatePagination,
+  generateRandomHexColor,
+  getPaginationSkip,
+} from "@/lib/utils";
 import {
   CreateTodoInput,
   GetTodosInput,
@@ -12,8 +16,6 @@ export default class TodoService {
   static async getTodos(userId: string, query: GetTodosInput["query"]) {
     const { sort, q, page = 1 } = query;
     const labels = query.labels?.split(",");
-
-    const skip = (page - 1) * API.PAGINATION.DEFAULT_PAGE_SIZE;
 
     const whereClause: Prisma.TodoWhereInput = {
       deletedAt: null,
@@ -55,19 +57,14 @@ export default class TodoService {
           ...(sort === "ascByContent" && { content: "asc" }),
           ...(sort === "descByContent" && { content: "desc" }),
         },
-        skip,
+        skip: getPaginationSkip(page),
         take: API.PAGINATION.DEFAULT_PAGE_SIZE,
       }),
       prisma.todo.count({ where: whereClause }),
     ]);
 
     return {
-      pagination: {
-        total,
-        totalPage: Math.ceil(total / API.PAGINATION.DEFAULT_PAGE_SIZE),
-        hasNext: skip + API.PAGINATION.DEFAULT_PAGE_SIZE < total,
-        hasPrev: skip > 0,
-      },
+      pagination: calculatePagination(total, page),
       todos,
     };
   }

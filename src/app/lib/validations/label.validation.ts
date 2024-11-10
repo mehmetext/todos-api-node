@@ -11,5 +11,12 @@ export const createLabelSchema = z.object({
   }),
 });
 
+export const getLabelsSchema = z.object({
+  query: z.object({
+    page: z.number().optional(),
+  }),
+});
+
 export type CreateLabelInput = z.infer<typeof createLabelSchema>;
 export type UpdateLabelInput = z.infer<typeof createLabelSchema>;
+export type GetLabelsInput = z.infer<typeof getLabelsSchema>;

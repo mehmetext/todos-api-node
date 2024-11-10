@@ -1,24 +1,37 @@
 import prisma from "@/lib/core/prisma";
-import { CreateLabelInput, UpdateLabelInput } from "@/lib/validations";
+import { calculatePagination, getPaginationSkip } from "@/lib/utils";
+import {
+  CreateLabelInput,
+  GetLabelsInput,
+  UpdateLabelInput,
+} from "@/lib/validations";
 
 export default class LabelService {
-  static async getLabels(userId: string) {
-    const labels = await prisma.label.findMany({
-      select: {
-        id: true,
-        name: true,
-        color: true,
-        _count: {
-          select: { todos: true },
+  static async getLabels(userId: string, query: GetLabelsInput["query"]) {
+    const [labels, total] = await Promise.all([
+      prisma.label.findMany({
+        select: {
+          id: true,
+          name: true,
+          color: true,
+          _count: {
+            select: { todos: true },
+          },
         },
-      },
-      where: { userId, deletedAt: null },
-    });
-    return labels.map((label) => ({
-      ...label,
-      todoCount: label._count.todos,
-      _count: undefined,
-    }));
+        where: { userId, deletedAt: null },
+        skip: getPaginationSkip(query.page),
+      }),
+      prisma.label.count({ where: { userId, deletedAt: null } }),
+    ]);
+
+    return {
+      pagination: calculatePagination(total, query.page),
+      labels: labels.map((label) => ({
+        ...label,
+        todoCount: label._count.todos,
+        _count: undefined,
+      })),
+    };
   }
 
   static async getLabelById(userId: string, id: string) {

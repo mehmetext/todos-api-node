@@ -1,11 +1,18 @@
 import ApiResponse from "@/lib/core/api-response";
-import { CreateLabelInput, UpdateLabelInput } from "@/lib/validations";
+import {
+  CreateLabelInput,
+  GetLabelsInput,
+  UpdateLabelInput,
+} from "@/lib/validations";
 import { LabelService } from "@/services";
 import { Request, Response } from "express";
 
 export default class LabelController {
-  static async getLabels(req: Request, res: Response) {
-    const labels = await LabelService.getLabels(req.user!.id);
+  static async getLabels(
+    req: Request<unknown, unknown, unknown, GetLabelsInput["query"]>,
+    res: Response
+  ) {
+    const labels = await LabelService.getLabels(req.user!.id, req.query);
     return ApiResponse.success(res, labels);
   }
 
