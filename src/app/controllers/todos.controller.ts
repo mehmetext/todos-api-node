@@ -28,6 +28,8 @@ export default class TodosController {
       orderBy: {
         ...(sort === "ascByCreatedAt" && { createdAt: "asc" }),
         ...(sort === "descByCreatedAt" && { createdAt: "desc" }),
+        ...(sort === "ascByUpdatedAt" && { updatedAt: "asc" }),
+        ...(sort === "descByUpdatedAt" && { updatedAt: "desc" }),
         ...(sort === "ascByCompleted" && { completed: "asc" }),
         ...(sort === "descByCompleted" && { completed: "desc" }),
         ...(sort === "ascByTitle" && { title: "asc" }),

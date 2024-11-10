@@ -27,6 +27,8 @@ export const getTodosSchema = z.object({
       .enum([
         "ascByCreatedAt",
         "descByCreatedAt",
+        "ascByUpdatedAt",
+        "descByUpdatedAt",
         "ascByCompleted",
         "descByCompleted",
         "ascByTitle",
