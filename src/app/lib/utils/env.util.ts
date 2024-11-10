@@ -20,6 +20,7 @@ const env = {
   JWT_ACCESS_EXPIRES_IN: process.env.JWT_ACCESS_EXPIRES_IN || "1h",
   JWT_REFRESH_SECRET: process.env.JWT_REFRESH_SECRET || "secret",
   JWT_REFRESH_EXPIRES_IN: process.env.JWT_REFRESH_EXPIRES_IN || "7d",
+  DATABASE_URL: process.env.DATABASE_URL || "",
 };
 
 export default env;

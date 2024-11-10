@@ -7,7 +7,10 @@
     "build:dev": "tsc -p . --watch",
     "start": "node dist/server.js",
     "start:dev": "node --watch dist/server.js",
-    "dev": "concurrently \"pnpm build:dev\" \"pnpm start:dev\""
+    "dev": "concurrently \"pnpm build:dev\" \"pnpm start:dev\"",
+    "prisma:generate": "dotenv -e .env.local -- prisma generate",
+    "prisma:migrate": "dotenv -e .env.local -- prisma migrate dev",
+    "prisma:studio": "dotenv -e .env.local -- prisma studio"
   },
   "keywords": [
     "todos",
@@ -23,7 +26,8 @@
     "@types/jsonwebtoken": "^9.0.7",
     "@types/module-alias": "^2.0.4",
     "@types/pg": "^8.11.10",
-    "concurrently": "^9.1.0"
+    "concurrently": "^9.1.0",
+    "dotenv-cli": "^7.4.2"
   },
   "dependencies": {
     "@prisma/client": "^5.22.0",
