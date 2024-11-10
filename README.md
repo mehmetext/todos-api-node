@@ -21,6 +21,9 @@
 - Soft delete support | Soft delete desteği
 - Secure cookie management | Güvenli cookie yönetimi
 - Standardized API responses | API response standardizasyonu
+- Helmet security middleware | Helmet güvenlik middleware'i
+- HPP (HTTP Parameter Pollution) protection | HPP koruması
+- Express async error handling | Express async hata yönetimi
 
 ## 🛠️ Tech Stack | Teknoloji Yığını
 
@@ -36,6 +39,8 @@
 - Bcrypt (Password Hashing)
 - CORS & Cookie Parser
 - Express Rate Limit
+- Helmet
+- HPP (HTTP Parameter Pollution)
 
 ### Development Tools | Geliştirme Araçları
 
@@ -92,6 +97,7 @@ pnpm dev
     - `sort`: Sorting options | Sıralama seçenekleri
     - `q`: Search term | Arama terimi
     - `page`: Page number | Sayfa numarası
+    - `labels`: Filter by labels | Etiketlere göre filtreleme
 - `GET /api/todos/:id` - Get single todo | Tek bir todo detayı
 - `POST /api/todos` - Create todo | Yeni todo oluşturma
 - `PUT /api/todos/:id` - Update todo | Todo güncelleme
@@ -100,6 +106,7 @@ pnpm dev
 ### Labels | Etiketler
 
 - `GET /api/labels` - List labels | Etiket listesi
+- `GET /api/labels/:id` - Get single label | Tek bir etiket detayı
 - `POST /api/labels` - Create label | Yeni etiket oluşturma
 - `PUT /api/labels/:id` - Update label | Etiket güncelleme
 - `DELETE /api/labels/:id` - Delete label | Etiket silme
@@ -113,13 +120,23 @@ pnpm dev
 - Input validation | Girdi doğrulama
 - Password hashing (bcrypt) | Şifre hashleme
 - Error handling and sanitization | Hata yönetimi ve sanitizasyon
-- Secure HTTP headers | Güvenli HTTP başlıkları
+- Secure HTTP headers (Helmet) | Güvenli HTTP başlıkları
+- HPP protection | HTTP Parameter Pollution koruması
+- Soft delete implementation | Soft delete implementasyonu
 
 ## 📝 Development Note | Geliştirme Notu
 
 **EN**: This project is still under development and is created for learning purposes. It can be used as an example to learn and implement modern web development practices.
 
 **TR**: Bu proje halen geliştirme aşamasındadır ve öğrenim amacıyla oluşturulmuştur. Modern web geliştirme pratiklerini öğrenmek ve uygulamak için bir örnek olarak kullanılabilir.
+
+## 🤝 Contributing | Katkıda Bulunma
+
+1. Fork the repository | Repoyu fork'layın
+2. Create feature branch | Feature branch oluşturun (`git checkout -b feature/amazing-feature`)
+3. Commit changes | Değişikliklerinizi commit edin (`git commit -m 'feat: add amazing feature'`)
+4. Push branch | Branch'inizi push edin (`git push origin feature/amazing-feature`)
+5. Open Pull Request | Pull Request açın
 
 ## 📄 License | Lisans
 
