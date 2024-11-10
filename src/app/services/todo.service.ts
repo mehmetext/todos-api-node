@@ -72,7 +72,10 @@ export default class TodoService {
   }
 
   static async getTodoById(userId: string, id: string) {
-    return prisma.todo.findUnique({ where: { deletedAt: null, id, userId } });
+    return prisma.todo.findUnique({
+      where: { deletedAt: null, id, userId },
+      include: { labels: { select: { id: true, name: true, color: true } } },
+    });
   }
 
   static async createTodo(userId: string, data: CreateTodoInput["body"]) {
