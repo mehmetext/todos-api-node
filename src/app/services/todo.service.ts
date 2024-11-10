@@ -10,10 +10,44 @@ import {
   GetTodosInput,
   UpdateTodoInput,
 } from "@/lib/validations";
-import { Prisma } from "@prisma/client";
+import { Prisma, Todo } from "@prisma/client";
+import { CacheService } from ".";
 
 export default class TodoService {
+  private static readonly CACHE_PREFIX = "todos";
+  private static readonly CACHE_TTL = 60 * 5; // 5 minutes
+
+  private static async invalidateCache(userId: string) {
+    await Promise.all([
+      CacheService.delByPattern(`${this.CACHE_PREFIX}:${userId}:list:*`),
+      CacheService.delByPattern(`${this.CACHE_PREFIX}:${userId}:count:*`),
+    ]);
+  }
+
   static async getTodos(userId: string, query: GetTodosInput["query"]) {
+    const listCacheKey = CacheService.generateKey(
+      this.CACHE_PREFIX,
+      userId,
+      "list",
+      JSON.stringify(query)
+    );
+    const countCacheKey = CacheService.generateKey(
+      this.CACHE_PREFIX,
+      userId,
+      "count",
+      JSON.stringify(query)
+    );
+
+    const cachedTodos = await CacheService.get<Todo[]>(listCacheKey);
+    const cachedTotal = await CacheService.get<number>(countCacheKey);
+
+    if (cachedTodos && cachedTotal) {
+      return {
+        pagination: calculatePagination(cachedTotal, query.page),
+        todos: cachedTodos,
+      };
+    }
+
     const labels = query.labels?.split(",");
 
     const whereClause: Prisma.TodoWhereInput = {
@@ -63,6 +97,11 @@ export default class TodoService {
       prisma.todo.count({ where: whereClause }),
     ]);
 
+    await Promise.all([
+      CacheService.set(listCacheKey, todos, this.CACHE_TTL),
+      CacheService.set(countCacheKey, total, this.CACHE_TTL),
+    ]);
+
     return {
       pagination: calculatePagination(total, query.page),
       todos,
@@ -77,7 +116,7 @@ export default class TodoService {
   }
 
   static async createTodo(userId: string, data: CreateTodoInput["body"]) {
-    return prisma.todo.create({
+    const todo = await prisma.todo.create({
       select: {
         id: true,
         title: true,
@@ -104,6 +143,10 @@ export default class TodoService {
         },
       },
     });
+
+    await this.invalidateCache(userId);
+
+    return todo;
   }
 
   static async updateTodo(
@@ -114,19 +157,27 @@ export default class TodoService {
     const todoExists = await this.getTodoById(userId, id);
     if (!todoExists) return null;
 
-    return prisma.todo.update({
+    const todo = await prisma.todo.update({
       where: { deletedAt: null, id, userId },
       data: { ...data, updatedAt: new Date() },
     });
+
+    await this.invalidateCache(userId);
+
+    return todo;
   }
 
   static async deleteTodo(userId: string, id: string) {
     const todoExists = await this.getTodoById(userId, id);
     if (!todoExists) return null;
 
-    return prisma.todo.update({
+    const todo = await prisma.todo.update({
       where: { id },
       data: { deletedAt: new Date() },
     });
+
+    await this.invalidateCache(userId);
+
+    return todo;
   }
 }

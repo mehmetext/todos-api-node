@@ -19,6 +19,7 @@ const env = {
   JWT_SECRET: process.env.JWT_SECRET || "secret",
   JWT_REFRESH_SECRET: process.env.JWT_REFRESH_SECRET || "secret",
   DATABASE_URL: process.env.DATABASE_URL || "",
+  REDIS_URL: process.env.REDIS_URL || "",
 };
 
 export default env;
