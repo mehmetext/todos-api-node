@@ -9,29 +9,24 @@ export default async function authMiddleware(
   res: Response,
   next: NextFunction
 ) {
-  try {
-    const authHeader = req.headers.authorization;
+  const authHeader = req.headers.authorization;
 
-    if (!authHeader?.startsWith("Bearer ")) {
-      return ApiResponse.unauthorized(res);
-    }
+  if (!authHeader?.startsWith("Bearer ")) {
+    return ApiResponse.unauthorized(res);
+  }
 
-    const token = authHeader.split(" ")[1];
-    const decoded = verifyAccessToken(token);
+  const token = authHeader.split(" ")[1];
+  const decoded = verifyAccessToken(token);
 
-    const user = await prisma.user.findUnique({
-      where: { id: decoded.userId },
-    });
+  const user = await prisma.user.findUnique({
+    where: { id: decoded.userId },
+  });
 
-    if (!user) {
-      console.error("User not found:", decoded.userId);
-      return ApiResponse.unauthorized(res, "Invalid token");
-    }
-
-    req.user = user;
-    next();
-  } catch (err) {
-    console.log(err);
+  if (!user) {
+    console.error("User not found:", decoded.userId);
     return ApiResponse.unauthorized(res, "Invalid token");
   }
+
+  req.user = user;
+  next();
 }

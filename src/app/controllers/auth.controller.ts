@@ -55,33 +55,29 @@ export default class AuthController {
   }
 
   static async refresh(req: Request, res: Response) {
-    try {
-      const refreshToken = req.cookies.refresh_token;
+    const refreshToken = req.cookies.refresh_token;
 
-      if (!refreshToken) {
-        return ApiResponse.unauthorized(res, "Refresh token is required");
-      }
+    if (!refreshToken) {
+      return ApiResponse.unauthorized(res, "Refresh token is required");
+    }
 
-      const tokens = await AuthService.refresh(
-        refreshToken,
-        req.ip,
-        req.headers["user-agent"]
-      );
+    const tokens = await AuthService.refresh(
+      refreshToken,
+      req.ip,
+      req.headers["user-agent"]
+    );
 
-      if (!tokens) {
-        return ApiResponse.unauthorized(res, "Invalid refresh token");
-      }
-
-      res.cookie(
-        "refresh_token",
-        tokens.refreshToken,
-        AuthController.REFRESH_TOKEN_COOKIE_OPTIONS
-      );
-
-      return ApiResponse.success(res, { accessToken: tokens.accessToken });
-    } catch {
+    if (!tokens) {
       return ApiResponse.unauthorized(res, "Invalid refresh token");
     }
+
+    res.cookie(
+      "refresh_token",
+      tokens.refreshToken,
+      AuthController.REFRESH_TOKEN_COOKIE_OPTIONS
+    );
+
+    return ApiResponse.success(res, { accessToken: tokens.accessToken });
   }
 
   static async logout(req: Request, res: Response) {
