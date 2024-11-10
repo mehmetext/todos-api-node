@@ -87,7 +87,10 @@ export default class TodoService {
     const todoExists = await this.getTodoById(userId, id);
     if (!todoExists) return null;
 
-    return prisma.todo.update({ where: { deletedAt: null, id, userId }, data });
+    return prisma.todo.update({
+      where: { deletedAt: null, id, userId },
+      data: { ...data, updatedAt: new Date() },
+    });
   }
 
   static async deleteTodo(userId: string, id: string) {
