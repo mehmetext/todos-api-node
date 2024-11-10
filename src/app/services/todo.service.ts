@@ -18,10 +18,7 @@ export default class TodoService {
   private static readonly CACHE_TTL = 60 * 5; // 5 minutes
 
   private static async invalidateCache(userId: string) {
-    await Promise.all([
-      CacheService.delByPattern(`${this.CACHE_PREFIX}:${userId}:list:*`),
-      CacheService.delByPattern(`${this.CACHE_PREFIX}:${userId}:count:*`),
-    ]);
+    await CacheService.delByPattern(`${this.CACHE_PREFIX}:${userId}:*`);
   }
 
   static async getTodos(userId: string, query: GetTodosInput["query"]) {
@@ -109,10 +106,26 @@ export default class TodoService {
   }
 
   static async getTodoById(userId: string, id: string) {
-    return prisma.todo.findUnique({
+    const todoCacheKey = CacheService.generateKey(
+      this.CACHE_PREFIX,
+      userId,
+      id
+    );
+
+    const cachedTodo = await CacheService.get<Todo>(todoCacheKey);
+
+    if (cachedTodo) return cachedTodo;
+
+    const todo = await prisma.todo.findUnique({
       where: { deletedAt: null, id, userId },
       include: { labels: { select: { id: true, name: true, color: true } } },
     });
+
+    if (!todo) return null;
+
+    await CacheService.set(todoCacheKey, todo, this.CACHE_TTL);
+
+    return todo;
   }
 
   static async createTodo(userId: string, data: CreateTodoInput["body"]) {
