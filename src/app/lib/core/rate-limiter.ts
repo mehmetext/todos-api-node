@@ -1,13 +1,13 @@
-import { NextFunction, Request, Response } from "express";
+import { Request, Response } from "express";
 import rateLimit from "express-rate-limit";
 import { env } from "../utils";
 import ApiResponse from "./api-response";
 
 const options = {
   windowMs: 15 * 60 * 1000, // 15 minutes
-  max: 100,
+  max: 1,
   skip: () => env.NODE_ENV === "development",
-  handler: (req: Request, res: Response, next: NextFunction) => {
+  handler: (req: Request, res: Response) => {
     ApiResponse.error(
       res,
       "TOO_MANY_REQUESTS",

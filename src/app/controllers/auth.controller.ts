@@ -14,7 +14,10 @@ export default class AuthController {
     path: "/api/auth",
   };
 
-  static async login(req: Request<{}, {}, LoginInput["body"]>, res: Response) {
+  static async login(
+    req: Request<unknown, unknown, LoginInput["body"]>,
+    res: Response
+  ) {
     const { email, password } = req.body;
 
     const user = await prisma.user.findUnique({
@@ -51,7 +54,7 @@ export default class AuthController {
   }
 
   static async register(
-    req: Request<{}, {}, RegisterInput["body"]>,
+    req: Request<unknown, unknown, RegisterInput["body"]>,
     res: Response
   ) {
     const { email, name, password } = req.body;
@@ -118,7 +121,7 @@ export default class AuthController {
       );
 
       return ApiResponse.success(res, { accessToken: tokens.accessToken });
-    } catch (error) {
+    } catch {
       return ApiResponse.unauthorized(res, "Invalid refresh token");
     }
   }

@@ -4,7 +4,7 @@ interface IResponse<T> {
   error?: {
     code: string;
     message: string;
-    details?: any;
+    details?: unknown;
   };
   timestamp: string;
 }

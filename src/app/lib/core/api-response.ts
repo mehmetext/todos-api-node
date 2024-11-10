@@ -14,7 +14,7 @@ export default class ApiResponse {
     code: string,
     message: string,
     statusCode: number = 500,
-    details?: any
+    details?: unknown
   ): void {
     res.status(statusCode).json({
       success: false,
@@ -32,7 +32,7 @@ export default class ApiResponse {
     this.error(res, "NOT_FOUND", message, 404);
   }
 
-  static badRequest(res: Response, message: string, details?: any): void {
+  static badRequest(res: Response, message: string, details?: unknown): void {
     this.error(res, "BAD_REQUEST", message, 400, details);
   }
 

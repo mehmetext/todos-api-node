@@ -9,7 +9,7 @@ import { Request, Response } from "express";
 
 export default class TodosController {
   static async getTodos(
-    req: Request<{}, {}, {}, GetTodosInput["query"]>,
+    req: Request<unknown, unknown, unknown, GetTodosInput["query"]>,
     res: Response
   ) {
     const { sort, q } = req.query;
@@ -56,7 +56,7 @@ export default class TodosController {
   }
 
   static async createTodo(
-    req: Request<{}, {}, CreateTodoInput["body"]>,
+    req: Request<unknown, unknown, CreateTodoInput["body"]>,
     res: Response
   ) {
     const { title, content } = req.body;
@@ -73,7 +73,7 @@ export default class TodosController {
   }
 
   static async updateTodo(
-    req: Request<{ id: string }, {}, UpdateTodoInput["body"]>,
+    req: Request<{ id: string }, unknown, UpdateTodoInput["body"]>,
     res: Response
   ) {
     const { id } = req.params;
