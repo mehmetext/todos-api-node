@@ -5,9 +5,41 @@ import {
   GetLabelsInput,
   UpdateLabelInput,
 } from "@/lib/validations";
+import { Label } from "@prisma/client";
+import { CacheService } from ".";
 
 export default class LabelService {
+  private static readonly CACHE_PREFIX = "labels";
+  private static readonly CACHE_TTL = 60 * 5; // 5 minutes
+
+  private static async invalidateCache(userId: string) {
+    await CacheService.delByPattern(`${this.CACHE_PREFIX}:${userId}:*`);
+  }
+
   static async getLabels(userId: string, query: GetLabelsInput["query"]) {
+    const listCacheKey = CacheService.generateKey(
+      this.CACHE_PREFIX,
+      userId,
+      "list",
+      JSON.stringify(query)
+    );
+    const countCacheKey = CacheService.generateKey(
+      this.CACHE_PREFIX,
+      userId,
+      "count",
+      JSON.stringify(query)
+    );
+
+    const cachedLabels = await CacheService.get<Label[]>(listCacheKey);
+    const cachedTotal = await CacheService.get<number>(countCacheKey);
+
+    if (cachedLabels && cachedTotal) {
+      return {
+        pagination: calculatePagination(cachedTotal, query.page),
+        labels: cachedLabels,
+      };
+    }
+
     const [labels, total] = await Promise.all([
       prisma.label.findMany({
         select: {
@@ -24,6 +56,11 @@ export default class LabelService {
       prisma.label.count({ where: { userId, deletedAt: null } }),
     ]);
 
+    await Promise.all([
+      CacheService.set(listCacheKey, labels, this.CACHE_TTL),
+      CacheService.set(countCacheKey, total, this.CACHE_TTL),
+    ]);
+
     return {
       pagination: calculatePagination(total, query.page),
       labels: labels.map((label) => ({
@@ -35,6 +72,16 @@ export default class LabelService {
   }
 
   static async getLabelById(userId: string, id: string) {
+    const labelCacheKey = CacheService.generateKey(
+      this.CACHE_PREFIX,
+      userId,
+      id
+    );
+
+    const cachedLabel = await CacheService.get<Label>(labelCacheKey);
+
+    if (cachedLabel) return cachedLabel;
+
     const label = await prisma.label.findUnique({
       select: {
         id: true,
@@ -47,6 +94,8 @@ export default class LabelService {
 
     if (!label) return null;
 
+    await CacheService.set(labelCacheKey, label, this.CACHE_TTL);
+
     return {
       ...label,
       todoCount: label._count.todos,
@@ -55,7 +104,11 @@ export default class LabelService {
   }
 
   static async createLabel(userId: string, data: CreateLabelInput["body"]) {
-    return prisma.label.create({ data: { ...data, userId } });
+    const label = await prisma.label.create({ data: { ...data, userId } });
+
+    await this.invalidateCache(userId);
+
+    return label;
   }
 
   static async updateLabel(
@@ -66,19 +119,27 @@ export default class LabelService {
     const labelExists = await this.getLabelById(userId, id);
     if (!labelExists) return null;
 
-    return prisma.label.update({
+    const label = await prisma.label.update({
       where: { deletedAt: null, id, userId },
       data: { ...data, updatedAt: new Date() },
     });
+
+    await this.invalidateCache(userId);
+
+    return label;
   }
 
   static async deleteLabel(userId: string, id: string) {
     const labelExists = await this.getLabelById(userId, id);
     if (!labelExists) return null;
 
-    return prisma.label.update({
+    const label = await prisma.label.update({
       where: { id },
       data: { deletedAt: new Date() },
     });
+
+    await this.invalidateCache(userId);
+
+    return label;
   }
 }
