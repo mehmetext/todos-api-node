@@ -1,3 +1,4 @@
+import cookieParser from "cookie-parser";
 import cors from "cors";
 import express, { Application } from "express";
 import corsOptions from "./lib/core/cors";
@@ -11,6 +12,7 @@ const app: Application = express();
 
 // Middlewares
 app.use(cors(corsOptions));
+app.use(cookieParser());
 app.use(rateLimiter);
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
