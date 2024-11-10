@@ -10,6 +10,8 @@ import { Prisma } from "@prisma/client";
 export default class TodoService {
   static async getTodos(userId: string, query: GetTodosInput["query"]) {
     const { sort, q, page = 1 } = query;
+    const labels = query.labels?.split(",");
+
     const skip = (page - 1) * API.PAGINATION.DEFAULT_PAGE_SIZE;
 
     const whereClause: Prisma.TodoWhereInput = {
@@ -20,6 +22,11 @@ export default class TodoService {
           { title: { contains: q, mode: "insensitive" } },
           { content: { contains: q, mode: "insensitive" } },
         ],
+      }),
+      ...(labels && {
+        labels: {
+          some: { id: { in: labels } },
+        },
       }),
     };
 
@@ -32,6 +39,7 @@ export default class TodoService {
           completed: true,
           createdAt: true,
           updatedAt: true,
+          labels: { select: { id: true, name: true, color: true } },
         },
         where: whereClause,
         orderBy: {
