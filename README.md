@@ -57,7 +57,7 @@
 1. Clone the repository | Repoyu klonlayın
 
 ```bash
-git clone <repository-url>
+git clone https://github.com/mehmetext/todos-api-node.git
 ```
 
 2. Install dependencies | Bağımlılıkları yükleyin
