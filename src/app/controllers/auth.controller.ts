@@ -1,9 +1,9 @@
-import { AUTH } from "@/lib/constants/auth.constants";
+import { AUTH } from "@/lib/constants";
 import ApiResponse from "@/lib/core/api-response";
 import env from "@/lib/core/env";
 import prisma from "@/lib/core/prisma";
 import { getRefreshTokenExpiryMs } from "@/lib/utils";
-import { LoginInput, RegisterInput } from "@/lib/validations/auth.validation";
+import { LoginInput } from "@/lib/validations";
 import { AuthService } from "@/services";
 import { CookieOptions, Request, Response } from "express";
 
