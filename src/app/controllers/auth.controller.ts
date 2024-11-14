@@ -3,7 +3,7 @@ import ApiResponse from "@/lib/core/api-response";
 import env from "@/lib/core/env";
 import prisma from "@/lib/core/prisma";
 import { getRefreshTokenExpiryMs } from "@/lib/utils";
-import { LoginInput } from "@/lib/validations";
+import { LoginInput, RegisterInput } from "@/lib/validations";
 import { AuthService } from "@/services";
 import { CookieOptions, Request, Response } from "express";
 
