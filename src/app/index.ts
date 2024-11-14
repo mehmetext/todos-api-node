@@ -4,6 +4,7 @@ import express, { Application } from "express";
 import "express-async-errors";
 import helmet from "helmet";
 import hpp from "hpp";
+import { API } from "./lib/constants";
 import corsOptions from "./lib/core/cors";
 import env from "./lib/core/env";
 import rateLimiter from "./lib/core/rate-limiter";
@@ -24,7 +25,7 @@ app.use(express.urlencoded({ extended: true }));
 app.use(requestLoggerMiddleware);
 
 // Initialize routes
-app.use("/api", routes);
+app.use(API.ROUTES.BASE, routes);
 
 // Error handling middleware
 app.use(errorHandlerMiddleware);
