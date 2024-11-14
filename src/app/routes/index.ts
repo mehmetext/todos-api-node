@@ -12,11 +12,7 @@ router.use(API.ROUTES.AUTH, auth);
 router.use(API.ROUTES.LABELS, label);
 
 router.get("/health", (req, res) => {
-  return ApiResponse.success(res, {
-    message: "API is healthy",
-    uptime: process.uptime(),
-    timestamp: Date.now(),
-  });
+  return ApiResponse.success(res, "API is healthy");
 });
 
 export default router;
