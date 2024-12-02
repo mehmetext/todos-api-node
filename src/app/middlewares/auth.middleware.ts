@@ -1,11 +1,10 @@
 import ApiResponse from "@/lib/core/api-response";
 import prisma from "@/lib/core/prisma";
-import { IAuthRequest } from "@/lib/types/auth.types";
 import { verifyAccessToken } from "@/lib/utils";
-import { NextFunction, Response } from "express";
+import { NextFunction, Request, Response } from "express";
 
 export default async function authMiddleware(
-  req: IAuthRequest,
+  req: Request,
   res: Response,
   next: NextFunction
 ) {

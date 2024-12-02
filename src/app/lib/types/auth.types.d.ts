@@ -1,5 +1,3 @@
-import { Request } from "express";
-
 interface ITokenPayload {
   userId: string;
 }
@@ -7,8 +5,4 @@ interface ITokenPayload {
 interface IAuthTokens {
   accessToken: string;
   refreshToken: string;
-}
-
-interface IAuthRequest extends Request {
-  user?: IUser;
 }
