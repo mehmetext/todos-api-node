@@ -2,7 +2,6 @@ import jwt from "jsonwebtoken";
 import ms from "ms";
 import { AUTH } from "../constants";
 import env from "../core/env";
-import { IAuthTokens, ITokenPayload } from "../types/auth.types";
 
 export const generateTokens = (payload: ITokenPayload): IAuthTokens => {
   const accessToken = jwt.sign(payload, env.JWT_SECRET, {
