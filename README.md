@@ -11,6 +11,7 @@
 ## 💫 Features | Özellikler
 
 - Full type safety with TypeScript | TypeScript ile tam tip güvenliği
+- Docker containerization support | Docker konteynerizasyon desteği
 - JWT-based authentication (Access & Refresh tokens) | JWT tabanlı kimlik doğrulama
 - PostgreSQL database with Prisma ORM | PostgreSQL veritabanı (Prisma ORM)
 - Redis caching for improved performance | Redis önbellekleme ile performans iyileştirmesi
@@ -35,6 +36,7 @@
 - TypeScript
 - PostgreSQL & Prisma ORM
 - Redis
+- Docker
 
 ### Security | Güvenlik
 
